@@ -1,3 +1,9 @@
-git add economia-investimentos.Rproj Links.Rmd docs/site_libs/
-git commit -m "Adicionando arquivos e diretórios não rastreados"
-git push origin main
+# para adicionar todas as mudanças
+git add .
+
+# Fazendo Commit
+git commit -m "Sua mensagem de commit aqui"
+
+# Fazendo Push
+git push origin NOME_DO_BRANCH
+

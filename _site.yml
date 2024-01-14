@@ -4,8 +4,17 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Economia"
+    - text: "Brasil"
       href: Economia.html
+    - text: "Internacional"
+      href: Internacional.html      
     - text: "Investimentos"
       href: Investimentos.html
+  right:
+    - icon: fa-brands fa-linkedin
+      href: "https://www.linkedin.com/in/luiz-felipe-meier-cfp®-69a3b6a2"
+    - icon: fa-solid fa-square-envelope
+      href: "mailto:luizfelipe.meier@hotmail.com"
 output_dir: "docs"
+includes:
+  in_header: "<script src='https://kit.fontawesome.com/4e10600d5e.js' crossorigin='anonymous'></script>"
