@@ -1,0 +1,11 @@
+name: "Luiz Felipe Meier"
+navbar:
+  title: "Conjuntura Econômica"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Economia"
+      href: Economia.html
+    - text: "Investimentos"
+      href: Investimentos.html
+output_dir: "docs"
