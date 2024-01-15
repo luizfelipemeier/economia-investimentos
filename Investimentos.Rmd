@@ -1,6 +1,5 @@
 ---
 title: "Investimentos"
-author: "Luiz Felipe Meier"
 output: 
   bookdown::html_document2:
     theme: readable
@@ -12,12 +11,14 @@ output:
     toc: yes
     toc_depth: 3
     toc_float:
-        collapsed: yes
-        smooth_scroll: no
-date: "`r format(Sys.time(), '%d %B %Y')`"
+        collapsed: no
+        smooth_scroll: yes
+date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(Sys.time(), format = '%d de %B de %Y')`"
 ---
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
+
+<!-- Configuração do corpo do site -->
 <style>
   body {
     text-align: justify;
@@ -49,18 +50,7 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
     color: #333333; /* Cor padrão para texto */
   }
 
-  .linkedin-icon {
-    font-size: 24px; /* Tamanho do ícone do LinkedIn */
-    color: #0077b5; /* Cor do ícone do LinkedIn */
-    margin-right: 5px; /* Margem à direita do ícone */
-  }
 </style>
-<div style="margin-top: 20px;">
-  <span style="display: inline-block;">
-    <i class="fab fa-linkedin linkedin-icon"></i>
-  </span>
-  [LinkedIn](https://www.linkedin.com/in/luiz-felipe-meier-cfp%C2%AE-69a3b6a2/)
-</div>
 
 ```{r include=FALSE}
 

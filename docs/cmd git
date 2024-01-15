@@ -5,5 +5,5 @@ git add .
 git commit -m "Sua mensagem de commit aqui"
 
 # Fazendo Push
-git push origin NOME_DO_BRANCH
+git push origin main
 

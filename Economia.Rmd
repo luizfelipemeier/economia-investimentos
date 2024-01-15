@@ -73,7 +73,6 @@ library(forcats)
 library(plotly)
 library(highcharter)
 library(GetBCBData)
-library(usethis)
 
 ```
 
@@ -228,7 +227,7 @@ sidra <- function(z, y)
 IPCA <- sidra('/t/1737/n1/all/v/63,2263,2264,2265/p/all/d/v63%202,v2263%202,v2264%202,v2265%202', format(Sys.Date() - months(60), "%Y-%m")) %>% 
   pivot_wider(names_from = "Variável", values_from = "Valor")
 
-IPCA <- arrange(IPCA, desc(Data))
+IPCA <- arrange(IPCA, Data)
 colnames(IPCA) <- c("Data", "Mensal", "3 meses", "6 meses", "12 meses")
 
 IPCA_semestral <- IPCA %>% select(Data, `6 meses`) %>% 
@@ -261,7 +260,7 @@ sidra <- function(z, y)
 IPCA <- sidra('/t/1737/n1/all/v/63,2263,2264,2265/p/all/d/v63%202,v2263%202,v2264%202,v2265%202', format(Sys.Date() - months(120), "%Y-%m")) %>% 
   pivot_wider(names_from = "Variável", values_from = "Valor")
 
-IPCA <- arrange(IPCA, desc(Data))
+IPCA <- arrange(IPCA, Data)
 colnames(IPCA) <- c("Data", "Mensal", "3 meses", "6 meses", "12 meses")
 
 IPCA_anual <- IPCA %>% select(Data, `12 meses`) %>% 
