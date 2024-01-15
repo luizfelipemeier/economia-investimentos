@@ -77,4 +77,4 @@ library(usethis)
 
 ```
 
-Site em construção......
+Site em construção.
