@@ -16,7 +16,7 @@ jobs:
     - name: Set up R
       uses: r-lib/actions/setup-r@v1
       with:
-        r-version: default  # Usar a versão padrão do ambiente
+        r-version: 4.1.3  # Usar a versão padrão do ambiente
 
     - name: Install Dependencies
       run: |
