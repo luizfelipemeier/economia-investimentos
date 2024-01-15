@@ -1,0 +1,35 @@
+name: Update Site
+
+on:
+  push:
+    branches:
+      - main  # substitua pela branch principal do seu repositório
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up R
+      uses: r-lib/actions/setup-r@v1
+      with:
+        r-version: 4.1
+
+    - name: Install Dependencies
+      run: |
+        Rscript -e 'install.packages(c("rmarkdown", "usethis"))'
+
+    - name: Render R Markdown to HTML
+      run: Rscript update_and_push.R
+
+    - name: Commit Changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add .
+        git commit -m "Update site"
+   env:
+     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
