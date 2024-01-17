@@ -20,8 +20,8 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        mkdir -p $HOME/R/library
-        Rscript -e 'install.packages(c("rmarkdown", "usethis"), lib="$HOME/R/library")'
+        mkdir -p $GITHUB_WORKSPACE/R/library
+        Rscript -e 'install.packages(c("rmarkdown", "usethis"), lib="$GITHUB_WORKSPACE/R/library")'
 
     - name: Render R Markdown to HTML
       run: Rscript update_and_push.R
