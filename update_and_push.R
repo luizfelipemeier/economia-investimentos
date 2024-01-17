@@ -2,11 +2,13 @@
 
 # Configurar o diretório de bibliotecas local
 local_lib <- file.path(Sys.getenv("GITHUB_WORKSPACE"), "R/library")
-Sys.setenv(R_LIBS_USER = local_lib)
+if (!dir.exists(local_lib)) dir.create(local_lib, recursive = TRUE)
+.libPaths(c(local_lib, .libPaths()))
 
 # Instalar ou carregar os pacotes necessários
-if (!requireNamespace("rmarkdown", quietly = TRUE)) install.packages("rmarkdown")
-if (!requireNamespace("usethis", quietly = TRUE)) install.packages("usethis")
+install.packages("remotes")
+remotes::install_github("rstudio/rmarkdown")
+remotes::install_github("r-lib/usethis")
 
 # Renderize todos os arquivos R Markdown para HTML
 files <- list.files(pattern=".Rmd$", recursive=TRUE, full.names = TRUE)
