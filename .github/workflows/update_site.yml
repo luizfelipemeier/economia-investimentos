@@ -18,10 +18,10 @@ jobs:
         sudo apt-get update -y
         sudo apt-get install r-base
 
-    - name: Install Dependencies
+    - name: Create Temporary Library Directory
       run: |
-        mkdir -p $GITHUB_WORKSPACE/R/library
-        Rscript -e 'install.packages(c("rmarkdown", "usethis"), lib="$GITHUB_WORKSPACE/R/library")'
+        mkdir -p $GITHUB_WORKSPACE/tmp_library
+        Rscript -e 'install.packages(c("rmarkdown", "usethis"), lib="$GITHUB_WORKSPACE/tmp_library")'
 
     - name: Render R Markdown to HTML
       run: Rscript update_and_push.R
