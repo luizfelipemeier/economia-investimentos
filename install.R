@@ -1,5 +1,5 @@
 # install.R
-install.packages(c("rmarkdown", 
+devtools::install.packages(c("rmarkdown", 
                    "usethis", 
                    "bookdown",
                    "sidrar",
