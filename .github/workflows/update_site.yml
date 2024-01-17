@@ -20,7 +20,7 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        Rscript -e 'install.packages(c("rmarkdown", "usethis"))'
+        Rscript -e 'install.packages(c("rmarkdown", "usethis"), lib="~/.R/library")'
 
     - name: Render R Markdown to HTML
       run: Rscript update_and_push.R
