@@ -7,6 +7,7 @@ Sys.setenv(GITHUB_PAT = Sys.getenv("GITHUB_PAT"))
 # Instalar ou carregar os pacotes necessários
 install.packages("usethis")
 remotes::install_github("r-lib/usethis")
+install.packages("rmarkdown", lib = local_lib, repos = "https://cloud.r-project.org")
 
 # Renderizar todos os arquivos R Markdown para HTML
 files <- list.files(pattern=".Rmd$", recursive=TRUE, full.names = TRUE)
