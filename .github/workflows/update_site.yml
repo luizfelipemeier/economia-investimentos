@@ -3,7 +3,7 @@ name: Update Site
 on:
   push:
     branches:
-      - main  # substitua pela branch principal do seu repositório
+      - main
 
 jobs:
   build:
@@ -13,10 +13,10 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up R
-      uses: r-lib/actions/setup-r@v1
-      with:
-        r-version: 4.1.3  # Usar a versão padrão do ambiente
+    - name: Install R
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install r-base
 
     - name: Install Dependencies
       run: |
