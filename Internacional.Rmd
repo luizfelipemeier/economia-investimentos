@@ -52,6 +52,48 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
 
 </style>
 
+
+```{r include=FALSE}
+#instalando pacotes na pasta do repositorio
+install.packages(c("rmarkdown", 
+                   "usethis", 
+                   "bookdown",
+                   "sidrar",
+                   "ggplot2",
+                   "highcharter",
+                   "plotly",
+                   "kableExtra",
+                   "DT",
+                   "knitr",
+                   "forcats",
+                   "lubridate",
+                   "GetBCBData",
+                   "dplyr",
+                   "tidyverse",
+                   "GetBCBData",
+                   "curl",
+                   "rmarkdown"), lib = local_lib, repos = "https://cloud.r-project.org")
+
+```
+
+
+```{r include=FALSE}
+
+#carregando pacotes
+library(bookdown)
+library(sidrar)
+library(ggplot2)
+library(dplyr)
+library(tidyverse)
+library(lubridate)
+library(knitr)
+library(kableExtra)
+library(DT)
+library(forcats)
+library(plotly)
+library(highcharter)
+library(GetBCBData)
+
 ```
 
 # INTERNACIONAL

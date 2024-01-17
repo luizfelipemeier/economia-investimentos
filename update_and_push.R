@@ -8,6 +8,12 @@ if (!dir.exists(local_lib)) dir.create(local_lib, recursive = TRUE)
 # Carregar o token pessoal do arquivo .Renviron
 Sys.setenv(GITHUB_PAT = Sys.getenv("GITHUB_PAT"))
 
+# Instalar ou carregar os pacotes necessários
+install.packages("rmarkdown", lib = local_lib, repos = "https://cloud.r-project.org")
+install.packages("curl", lib = local_lib, repos = "https://cloud.r-project.org")
+install.packages("usethis", lib = local_lib, repos = "https://cloud.r-project.org")
+
+
 # Renderizar todos os arquivos R Markdown para HTML
 files <- list.files(pattern=".Rmd$", recursive=TRUE, full.names = TRUE)
 for (file in files) {

@@ -23,9 +23,10 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y pandoc libcurl4-openssl-dev
 
-    - name: Install Dependencies
-      run: |
-        R_LIBS=$GITHUB_WORKSPACE/R/library Rscript install.R
+  - name: Install Dependencies
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/R/library
+          Rscript -e 'install.packages(c("rmarkdown", "curl", "usethis"), lib="$GITHUB_WORKSPACE/R/library")'
 
     - name: Render R Markdown to HTML
       run: Rscript update_and_push.R
