@@ -14,5 +14,7 @@ devtools::install.packages(c("rmarkdown",
                    "GetBCBData",
                    "dplyr",
                    "tidyverse",
-                   "GetBCBData"
+                   "GetBCBData",
+                   "curl",
+                   "rmarkdown"
                    ), lib=Sys.getenv("R_LIBS"))
