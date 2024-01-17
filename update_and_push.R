@@ -13,3 +13,15 @@ for (file in files) {
 # Commit e push para o GitHub
 usethis::use_git()
 usethis::use_github_action("gh-pages")
+
+# Verificar se o diretório de bibliotecas local existe
+local_lib <- file.path(Sys.getenv("GITHUB_WORKSPACE"), "R/library")
+
+if (!dir.exists(local_lib)) {
+  dir.create(local_lib, recursive = TRUE)
+}
+
+# Instalar o pacote rmarkdown no diretório local
+install.packages("rmarkdown", lib = local_lib, repos = "https://cloud.r-project.org")
+
+# Resto do seu código (se houver)
