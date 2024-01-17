@@ -10,6 +10,7 @@ Sys.setenv(GITHUB_PAT = Sys.getenv("GITHUB_PAT"))
 
 # Instalar ou carregar os pacotes necessários
 install.packages("rmarkdown", lib = local_lib, repos = "https://cloud.r-project.org")
+install.packages(c("curl", "credentials", "httr2", "gert", "gh"), lib = local_lib, repos = "https://cloud.r-project.org")
 install.packages("usethis", lib = local_lib, repos = "https://cloud.r-project.org")
 
 # Renderizar todos os arquivos R Markdown para HTML
