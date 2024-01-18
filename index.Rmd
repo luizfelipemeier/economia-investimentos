@@ -13,7 +13,7 @@ output:
     toc_float:
         collapsed: no
         smooth_scroll: yes
-date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(Sys.time(), format = '%d de %B de %Y')`"
+date: "format(Sys.time(), format = '%d de %B de %Y')"
 ---
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
