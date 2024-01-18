@@ -25,7 +25,7 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        R_LIBS=$GITHUB_WORKSPACE/R/library Rscript -e 'install.packages(c("rmarkdown", "usethis", "curl"), lib=Sys.getenv("R_LIBS"))'
+        R_LIBS=$GITHUB_WORKSPACE/R/library Rscript -e 'install.packages(c("rmarkdown", "usethis", "curl", "bookdown"), lib=Sys.getenv("R_LIBS"))'
 
     - name: Render R Markdown to HTML
       run: Rscript update_and_push.R
