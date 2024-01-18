@@ -53,30 +53,8 @@ date: "format(Sys.time(), format = '%d de %B de %Y')"
 </style>
 
 ```{r include=FALSE}
-#instalando pacotes na pasta do repositorio
-install.packages(c("rmarkdown", 
-                   "usethis", 
-                   "bookdown",
-                   "sidrar",
-                   "ggplot2",
-                   "highcharter",
-                   "plotly",
-                   "kableExtra",
-                   "DT",
-                   "knitr",
-                   "forcats",
-                   "lubridate",
-                   "GetBCBData",
-                   "dplyr",
-                   "tidyverse",
-                   "GetBCBData",
-                   "curl",
-                   "rmarkdown"), lib = local_lib, repos = "https://cloud.r-project.org")
-
-```
-
-
-```{r include=FALSE}
+# instalando pacotes que nao foram instalados com o conda
+install.packages("GetBCBData")
 
 #carregando pacotes
 library(bookdown)
