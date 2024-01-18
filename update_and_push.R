@@ -9,8 +9,8 @@ if (!dir.exists(local_lib)) dir.create(local_lib, recursive = TRUE)
 Sys.setenv(GITHUB_PAT = Sys.getenv("GITHUB_PAT"))
 
 # Instalar ou carregar os pacotes necessários
+install.packages(c("curl", "credentials", "httr2", "gert", "gh"), lib = local_lib, repos = "https://cloud.r-project.org")
 install.packages("rmarkdown", lib = local_lib, repos = "https://cloud.r-project.org")
-install.packages("curl", lib = local_lib, repos = "https://cloud.r-project.org")
 install.packages("usethis", lib = local_lib, repos = "https://cloud.r-project.org")
 
 
