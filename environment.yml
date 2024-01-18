@@ -1,23 +1,21 @@
 name: r_environment
 channels:
   - conda-forge
-  - base
   - defaults
-  - R
 dependencies:
-  - r-base=4.3.2
-  - r-tidyverse=2.0.0
-  - r-rmarkdown=2.22
-  - r-usethis=2.2.0
-  - r-curl=5.1.0
-  - r-bookdown=0.37
-  - r-sidrar=0.2.9
-  - r-ggplot2=3.4.4
-  - r-dplyr=1.1.4
-  - r-lubridate=1.9.3
-  - r-knitr=1.45
-  - r-kableExtra=1.3.4
-  - r-DT=0.31
-  - r-forcats=1.0.0
-  - r-plotly=4.10.4
-  - r-highcharter=0.9.4
+  - r-base
+  - r-tidyverse
+  - r-rmarkdown
+  - r-usethis
+  - r-curl
+  - r-bookdown
+  - r-sidrar
+  - r-ggplot2
+  - r-dplyr
+  - r-lubridate
+  - r-knitr
+  - r-kableExtra
+  - r-DT
+  - r-forcats
+  - r-plotly
+  - r-highcharter
