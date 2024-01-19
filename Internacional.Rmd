@@ -55,9 +55,24 @@ date: "format(Sys.time(), format = '%d de %B de %Y')"
 ```{r include=FALSE}
 
 # instalando pacotes que nao foram instalados com o conda
-install.packages("GetBCBData")
+#install.packages("GetBCBData")
+#install.packages("bookdown")
+#install.packages("sidrar")
+#install.packages("ggplot2")
+#install.packages("dplyr")
+#install.packages("tidyverse")
+#install.packages("lubridate")
+#install.packages("knitr")
+#install.packages("kableExtra")
+#install.packages("DT")
+#install.packages("forcats")
+#install.packages("plotly")
+#install.packages("highcharter")
+#install.packages("GetBCBData")
 
+```
 
+```{r include=FALSE}
 #carregando pacotes
 library(bookdown)
 library(sidrar)
