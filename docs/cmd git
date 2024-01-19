@@ -1,9 +1,0 @@
-# para adicionar todas as mudanças
-git add .
-
-# Fazendo Commit
-git commit -m "Sua mensagem de commit aqui"
-
-# Fazendo Push
-git push origin main
-

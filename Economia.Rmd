@@ -13,7 +13,7 @@ output:
     toc_float:
         collapsed: no
         smooth_scroll: yes
-date: "format(Sys.time(), format = '%d de %B de %Y')"
+date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(Sys.time(), format = '%d de %B de %Y')`"
 ---
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
@@ -53,6 +53,7 @@ date: "format(Sys.time(), format = '%d de %B de %Y')"
 </style>
 
 ```{r include=FALSE}
+
 #carregando pacotes
 library(bookdown)
 library(sidrar)
@@ -628,7 +629,7 @@ As séries da PMC ajustadas sazonalmente consideram como fatores sazonais, o efe
 
 ##### RECEITA
 
-```{r echo = FALSE, warning=FALSE, message=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
 
 sidra <- function(z, y)
 {
@@ -640,28 +641,27 @@ sidra <- function(z, y)
     filter(Data >= y) 
     }
 
+# Capturando os dados e tratando
 PMC = sidra('/t/8880/n1/all/v/7169/p/all/c11046/56733/d/v7169%205', format(Sys.Date() - months(26), "%Y-%m")) %>% 
   rename(PMC = Valor) %>% 
   mutate(PMC_MENSAL = ((PMC / lag(PMC)-1) * 100 )) %>% 
-  mutate(Cor = ifelse(PMC_MENSAL > 0, "azul", "vermelho")) %>% 
+  mutate(Cor = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A")) %>% 
   filter(Data >= format(Sys.Date() - months(25), "%Y-%m"))
 
-ggplot(PMC, aes(x = Data, y = PMC_MENSAL, fill = Cor)) +
-  geom_col()+
-  labs(x = "", y = "Variação %") +
-  scale_fill_manual(
-    values = c(azul = "#82C35F",
-    vermelho = "#E75A5A")
-  ) +
-  theme_light() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
+#Plotando
+hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A"))) %>%
+  hc_yAxis(title = list(text = "Variação %")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_colors(c("#82C35F", "#E75A5A")) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(pointFormat = "<b>{point.y:.2f}%</b>")
 
 ```
 
 ##### VOLUME
 
-```{r echo = FALSE, warning=FALSE, message=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
 
 sidra <- function(z, y)
 {
@@ -673,22 +673,21 @@ sidra <- function(z, y)
     filter(Data >= y) 
     }
 
+#Capoturando e tratando dados
 PMC = sidra('/t/8880/n1/all/v/7169/p/all/c11046/56734/d/v7169%205', format(Sys.Date() - months(26), "%Y-%m")) %>% 
   rename(PMC = Valor) %>% 
   mutate(PMC_MENSAL = ((PMC / lag(PMC)-1) * 100 )) %>% 
-  mutate(Cor = ifelse(PMC_MENSAL > 0, "azul", "vermelho")) %>% 
+  mutate(Cor = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A")) %>% 
   filter(Data >= format(Sys.Date() - months(25), "%Y-%m"))
 
-ggplot(PMC, aes(x = Data, y = PMC_MENSAL, fill = Cor)) +
-  geom_col()+
-  labs(x = "", y = "Variação %") +
-  scale_fill_manual(
-    values = c(azul = "#82C35F",
-    vermelho = "#E75A5A")
-  ) +
-  theme_light() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
+#protando resultado
+hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A"))) %>%
+  hc_yAxis(title = list(text = "Variação %")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_colors(c("#82C35F", "#E75A5A")) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(pointFormat = "<b>{point.y:.2f}%</b>")
 
 ```
 
@@ -702,7 +701,7 @@ ggplot(PMC, aes(x = Data, y = PMC_MENSAL, fill = Cor)) +
 
 ##### RECEITA
 
-```{r echo = FALSE, warning=FALSE, message=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
 
 sidra <- function(z, y)
 {
@@ -717,25 +716,22 @@ sidra <- function(z, y)
 PMC = sidra('/t/8881/n1/all/v/7169/p/all/c11046/56735/d/v7169%205', format(Sys.Date() - months(26), "%Y-%m")) %>% 
   rename(PMC = Valor) %>% 
   mutate(PMC_MENSAL = ((PMC / lag(PMC)-1) * 100 )) %>% 
-  mutate(Cor = ifelse(PMC_MENSAL > 0, "azul", "vermelho")) %>% 
+  mutate(Cor = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A")) %>% 
   filter(Data >= format(Sys.Date() - months(25), "%Y-%m"))
 
-ggplot(PMC, aes(x = Data, y = PMC_MENSAL, fill = Cor)) +
-  geom_col()+
-  labs(x = "", y = "Variação %") +
-  scale_fill_manual(
-    values = c(azul = "#82C35F",
-    vermelho = "#E75A5A")
-  ) +
-  theme_light() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
-
+#Plotando
+hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A"))) %>%
+  hc_yAxis(title = list(text = "Variação %")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_colors(c("#82C35F", "#E75A5A")) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(pointFormat = "<b>{point.y:.2f}%</b>")
 ```
 
 ##### VOLUME
 
-```{r echo = FALSE, warning=FALSE, message=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
 
 sidra <- function(z, y)
 {
@@ -750,19 +746,17 @@ sidra <- function(z, y)
 PMC = sidra('/t/8881/n1/all/v/7169/p/all/c11046/56736/d/v7169%205', format(Sys.Date() - months(26), "%Y-%m")) %>% 
   rename(PMC = Valor) %>% 
   mutate(PMC_MENSAL = ((PMC / lag(PMC)-1) * 100 )) %>% 
-  mutate(Cor = ifelse(PMC_MENSAL > 0, "azul", "vermelho")) %>% 
+  mutate(Cor = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A")) %>% 
   filter(Data >= format(Sys.Date() - months(25), "%Y-%m"))
 
-ggplot(PMC, aes(x = Data, y = PMC_MENSAL, fill = Cor)) +
-  geom_col()+
-  labs(x = "", y = "Variação %") +
-  scale_fill_manual(
-    values = c(azul = "#82C35F",
-    vermelho = "#E75A5A")
-  ) +
-  theme_light() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
+#Protando gráfico
+hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL > 0, "#82C35F", "#E75A5A"))) %>%
+  hc_yAxis(title = list(text = "Variação %")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_colors(c("#82C35F", "#E75A5A")) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(pointFormat = "<b>{point.y:.2f}%</b>")
 
 ```
 
@@ -774,7 +768,7 @@ A Pesquisa Mensal de Serviços - PMS tem como objetivo produzir indicadores que 
 
 #### RECEITA
 
-```{r echo = FALSE, warning=FALSE, message=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
 sidra <- function(z, y)
 {
   get_sidra(api = z) %>% 
@@ -788,25 +782,22 @@ sidra <- function(z, y)
 PMS = sidra('/t/5906/n1/all/v/7167/p/all/c11046/56725/d/v7167%205', format(Sys.Date() - months(26), "%Y-%m")) %>% 
   rename(PMS = Valor) %>% 
   mutate(PMS_MENSAL = ((PMS / lag(PMS)-1) * 100 )) %>% 
-  mutate(Cor = ifelse(PMS_MENSAL > 0, "azul", "vermelho"))%>% 
+  mutate(Cor = ifelse(PMS_MENSAL > 0, "#82C35F", "#E75A5A"))%>% 
   filter(Data >= format(Sys.Date() - months(25), "%Y-%m"))
 
-ggplot(PMS, aes(x = Data, y = PMS_MENSAL, fill = Cor)) +
-  geom_col()+
-  labs(x = "", y = "") +
-  scale_fill_manual(
-    values = c(azul = "#82C35F",
-    vermelho = "#E75A5A")
-  ) +
-  theme_light() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
+hchart(PMS, "column", hcaes(x = Data, y = PMS_MENSAL, color = ifelse(PMS_MENSAL > 0, "#82C35F", "#E75A5A"))) %>%
+  hc_yAxis(title = list(text = "Variação %")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_colors(c("#82C35F", "#E75A5A")) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(pointFormat = "<b>{point.y:.2f}%</b>")
 
 ```
 
 #### VOLUME
 
-```{r echo = FALSE, warning=FALSE, message=FALSE}
+```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
 sidra <- function(z, y)
 {
   get_sidra(api = z) %>% 
@@ -820,19 +811,16 @@ sidra <- function(z, y)
 PMS = sidra('/t/5906/n1/all/v/7167/p/all/c11046/56726/d/v7167%205', format(Sys.Date() - months(26), "%Y-%m")) %>% 
   rename(PMS = Valor) %>% 
   mutate(PMS_MENSAL = ((PMS / lag(PMS)-1) * 100 )) %>% 
-  mutate(Cor = ifelse(PMS_MENSAL > 0, "azul", "vermelho"))%>% 
+  mutate(Cor = ifelse(PMS_MENSAL > 0, "#82C35F", "#E75A5A"))%>% 
   filter(Data >= format(Sys.Date() - months(25), "%Y-%m"))
 
-ggplot(PMS, aes(x = Data, y = PMS_MENSAL, fill = Cor)) +
-  geom_col()+
-  labs(x = "", y = "") +
-  scale_fill_manual(
-    values = c(azul = "#82C35F",
-    vermelho = "#E75A5A")
-  ) +
-  theme_light() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = "none")
+hchart(PMS, "column", hcaes(x = Data, y = PMS_MENSAL, color = ifelse(PMS_MENSAL > 0, "#82C35F", "#E75A5A"))) %>%
+  hc_yAxis(title = list(text = "Variação %")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_colors(c("#82C35F", "#E75A5A")) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(pointFormat = "<b>{point.y:.2f}%</b>")
 
 ```
 
