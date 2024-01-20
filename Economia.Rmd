@@ -30,27 +30,59 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
 @media only screen and (max-width: 600px) {
   body {
     margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
+    font-size: 2rem;
   }
 }
 
   h1 {
     color: #0066cc; /* Azul para títulos de nível 1 */
+    font-size: 4rem;
   }
 
   h2 {
     color: #3399ff; /* Azul claro para títulos de nível 2 */
+    font-size: 2rem;
   }
 
   h3 {
     color: #66b2ff; /* Azul ainda mais claro para títulos de nível 3 */
+    font-size: 2rem;
   }
 
   p {
-    font-size: 16px; /* Tamanho da fonte para parágrafos */
     color: #333333; /* Cor padrão para texto */
+    font-size: 2rem;
   }
 
 </style>
+
+
+<style>
+  .dual-frames {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .frame {
+    width: 48%;
+    border: 0.2rem solid #ddd;
+    padding: 0.8rem;
+    box-sizing: border-box;
+    font-size: 1rem; /* Exemplo de tamanho de fonte para os quadros usando unidades relativas */
+
+    /* Adicione uma margem inferior para espaçamento entre os quadros */
+    margin-bottom: 1em;
+  }
+
+  /* Estilos para telas menores que 600 pixels de largura */
+  @media only screen and (max-width: 600px) {
+    .frame {
+      width: 100%;
+    }
+  }
+</style>
+
 
 ```{r include=FALSE}
 
@@ -75,11 +107,95 @@ library(GetBCBData)
 
 Dados referentes a economia brasileira. Dados para auxiliar a entender a conjuntura econômica do nosso país.
 
+
 ## PRODUTO 
 
-O produto interno bruto pode ser mensurado tanto na ótica da demanda, quanto na ótica da oferta.
+As métricas de produto buscam mensurar quantidade de riqueza gerada em um país, estado ou cidade, dentro de um período de tempo.
 
 ### Produto Interno Bruto
+
+O Produto Interno Bruto (PIB - *GDP/Gross Domestic Product*) é a soma de todos os bens e serviços finais produzidos por um país, estado ou cidade, geralmente em um ano.
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+<div class="dual-frames">
+<div class="frame">
+*The Organisation for Economic Co-operation and Development ([OECD](https://en.wikipedia.org/wiki/OECD)) defines GDP as "an aggregate measure of production equal to the sum of the gross values added of all resident and institutional units engaged in production and services (plus any taxes, and minus any subsidies, on products not included in the value of their outputs)"*
+</div>
+<div class="frame">
+*An [IMF](https://en.wikipedia.org/wiki/International_Monetary_Fund) publication states that, "GDP measures the monetary value of final goods and services—that are bought by the final user—produced in a country in a given period (say a quarter or a year)."*
+</div>
+</div>
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+Existem três metodologias de cálculo do PIB, sendo que teoricamente todas elas chegam ao mesmo valor final.
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+**Ótica da oferta ou produção**
+
+Também conhecida como *método do valor adicionado*, calcula o montante que cada estágio da produção agrega ao produto. Primeiro estima-se o do *valor adicionado bruto* fabricado das diversas atividades econômicas.Posteriormente estima-se o valor do *consumo intermediário*, onde considera os custos dos bens e serviços utilizados para produzir os bens e serviços finais. Ademais, subtrai o valor doméstico bruto do valor intermediário. Por fim, *subtrai os valores dos impostos indiretos e soma os valores dos subsídios*. 
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+**Ótica da renda**
+
+O método inicia com o somatório dos *salários, vencimentos e rendimentos* recebidos pelas atividades laborais, *juros e receitas* advindos de diversos investimentos, *aluguéis* referentes aos alugueis/arrendamentos de imóveis ou terras, *lucros corporativos* oriundos dos lucros das empresas e *lucros líquidos* das transferências dos lucros das empresas para as pessoas.
+Este somatório resulta no rendimento doméstico líquido dos custos dos fatores.
+Para chegar ao PIB, deve-se ainda considerar a *deprecisação do capital*, as *taxas de produção e importação* e os *subsídios* estatais. 
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+**Ótica do consumo**
+
+teste
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+df.bcb <- gbcbd_get_series(id = 4192 ,
+                       first.date = '2000-01-01',
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+```
+
 
 ### PIB per capita
 
