@@ -115,6 +115,7 @@ As métricas de produto buscam mensurar quantidade de riqueza gerada em um país
 ### Produto Interno Bruto
 
 O Produto Interno Bruto (PIB - *GDP/Gross Domestic Product*) é a soma de todos os bens e serviços finais produzidos por um país, estado ou cidade, geralmente em um ano.
+
 <style>
   .spacer {
     height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
