@@ -240,7 +240,7 @@ Atualmente, a população-objetivo do IPCA abrange as famílias<span style="font
 
 [Tabela 1337](https://sidra.ibge.gov.br/tabela/1737)
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y)
 {
@@ -265,7 +265,7 @@ datatable(IPCA, options = list(pageLength = 10, autoWidth = TRUE, columnDefs = l
 
 ###### Mensal
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y) {
   get_sidra(api = z) %>% 
@@ -296,7 +296,7 @@ hchart(IPCA, "column", hcaes(x = Data, y = Mensal, color = ifelse(Mensal > 0, "#
 
 ###### 3 meses
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 # Função sidra
 sidra <- function(z, y) {
   get_sidra(api = z) %>% 
@@ -325,7 +325,7 @@ hchart(IPCA, "column", hcaes(x = Data, y = `3 meses`, color = ifelse(`3 meses` >
 
 ###### 6 meses
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 sidra <- function(z, y)
 {
   get_sidra(api = z) %>% 
@@ -358,7 +358,7 @@ hchart(IPCA, "column", hcaes(x = Data, y = `6 meses`, color = ifelse(`6 meses` >
 
 ###### 12 meses 
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 sidra <- function(z, y)
 {
   get_sidra(api = z) %>% 
@@ -394,7 +394,7 @@ hchart(IPCA, "column", hcaes(x = Data, y = `12 meses`, color = ifelse(`12 meses`
 - Os gráficos apresentados são referentes aos grupos da cesta que é definida pela Pesquisa de Orçamentos Familiares. 
 - Com estes dados é possível identificar quais grupos sofreram maiores mudanças nos níveis de preços no período analisado.
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 grupos_box <- get_sidra(api = '/t/7060/n1/all/v/63/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v63%202')
 
@@ -416,7 +416,7 @@ ggplot(grupos_box, aes(x = Valor, y = fct_rev(`Geral, grupo, subgrupo, item e su
 
 ###### Mensal
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 grupos_mensal <- get_sidra(api = '/t/7060/n1/all/v/63/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v63%202') %>%   
   mutate(
@@ -441,7 +441,7 @@ plot_ly(data = grupos_mensal,
 
 ###### Acumulada em 12 meses
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 grupos_mensal <- get_sidra(api = '/t/7060/n1/all/v/2265/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v2265%202') %>%   mutate(
     cor = ifelse(Valor > 0, "#82C35F", "#E75A5A"),
@@ -465,7 +465,7 @@ plot_ly(data = grupos_mensal,
 
 ###### Pesos dos grupos
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 pesos <- get_sidra(api = '/t/7060/n1/all/v/66/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v66%204') %>%   
   mutate(
@@ -502,7 +502,7 @@ Os índices, portanto, levam em conta não apenas a variação de preço de cada
 
 ##### Índice {.tabset .tabset-fade .tabset-pills}
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y)
 {
@@ -527,7 +527,7 @@ datatable(IPCA, options = list(pageLength = 10, autoWidth = TRUE, columnDefs = l
 
 ###### Mensal
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y) {
   get_sidra(api = z) %>% 
@@ -558,7 +558,7 @@ hchart(IPCA, "column", hcaes(x = Data, y = Mensal, color = ifelse(Mensal > 0, "#
 
 ###### 12 meses 
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 sidra <- function(z, y)
 {
   get_sidra(api = z) %>% 
@@ -594,7 +594,7 @@ hchart(IPCA, "column", hcaes(x = Data, y = `12 meses`, color = ifelse(`12 meses`
 - Os gráficos apresentados são referentes aos grupos da cesta que é definida pela Pesquisa de Orçamentos Familiares. 
 - Com estes dados é possível identificar quais grupos sofreram maiores mudanças nos níveis de preços no período analisado.
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 grupos_box <- get_sidra(api = '/t/7063/n1/all/v/44/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v44%202')
 
@@ -616,7 +616,7 @@ ggplot(grupos_box, aes(x = Valor, y = fct_rev(`Geral, grupo, subgrupo, item e su
 
 ###### Mensal
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 grupos_mensal <- get_sidra(api = '/t/7063/n1/all/v/44/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v44%202') %>%   
   mutate(
@@ -641,7 +641,7 @@ plot_ly(data = grupos_mensal,
 
 ###### Acumulada em 12 meses
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 grupos_mensal <- get_sidra(api = '/t/7063/n1/all/v/2292/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v2292%202') %>%   mutate(
     cor = ifelse(Valor > 0, "#82C35F", "#E75A5A"),
@@ -665,7 +665,7 @@ plot_ly(data = grupos_mensal,
 
 ###### Pesos dos grupos
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 pesos <- get_sidra(api = '/t/7063/n1/all/v/45/p/all/c315/7170,7445,7486,7558,7625,7660,7712,7766,7786/d/v45%204') %>%   
   mutate(
@@ -693,7 +693,7 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 
 O ig..
 
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 IPGM <- GetBCBData::gbcbd_get_series(
 id = 189,
@@ -746,7 +746,7 @@ As séries da PMC ajustadas sazonalmente consideram como fatores sazonais, o efe
 
 ##### RECEITA
 
-```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y)
 {
@@ -778,7 +778,7 @@ hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL 
 
 ##### VOLUME
 
-```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y)
 {
@@ -818,7 +818,7 @@ hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL 
 
 ##### RECEITA
 
-```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y)
 {
@@ -848,7 +848,7 @@ hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL 
 
 ##### VOLUME
 
-```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 sidra <- function(z, y)
 {
@@ -885,7 +885,7 @@ A Pesquisa Mensal de Serviços - PMS tem como objetivo produzir indicadores que 
 
 #### RECEITA
 
-```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 sidra <- function(z, y)
 {
   get_sidra(api = z) %>% 
@@ -914,7 +914,7 @@ hchart(PMS, "column", hcaes(x = Data, y = PMS_MENSAL, color = ifelse(PMS_MENSAL 
 
 #### VOLUME
 
-```{r echo = FALSE, warning=FALSE, message=FALSE, fig.align='center', fig.width=8}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 sidra <- function(z, y)
 {
   get_sidra(api = z) %>% 
