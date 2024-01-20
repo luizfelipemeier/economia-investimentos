@@ -32,6 +32,13 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
     margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
     font-size: 2rem;
   }
+
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate {
+    font-size: 0.8rem; 
+  }
 }
 
   h1 {
@@ -77,10 +84,18 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
 
   /* Estilos para telas menores que 600 pixels de largura */
   @media only screen and (max-width: 600px) {
-    .frame {
-      width: 100%;
-    }
+  body {
+    margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
+    font-size: 2rem;
   }
+
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate {
+    font-size: 0.8rem; 
+  }
+}
 </style>
 
 
@@ -240,7 +255,7 @@ Atualmente, a população-objetivo do IPCA abrange as famílias<span style="font
 
 [Tabela 1337](https://sidra.ibge.gov.br/tabela/1737)
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100vw'}
 
 sidra <- function(z, y)
 {
@@ -258,7 +273,11 @@ IPCA <- sidra('/t/1737/n1/all/v/63,2263,2264,2265/p/all/d/v63%202,v2263%202,v226
 IPCA <- arrange(IPCA, desc(Data))
 colnames(IPCA) <- c("Data", "Mensal", "3 meses", "6 meses", "12 meses")
 
-datatable(IPCA, options = list(pageLength = 10, autoWidth = TRUE, columnDefs = list(list(className = 'dt-center', targets = '_all'))), caption = "VARIAÇÃO MENSAL E ACUMULADA")
+datatable(IPCA, options = list(
+  pageLength = 10,
+  autoWidth = TRUE,
+  columnDefs = list(list(className = 'dt-center', targets = '_all'))
+), caption = "VARIAÇÃO MENSAL E ACUMULADA", width = "100%", class = "display nowrap")
 
 
 ```
