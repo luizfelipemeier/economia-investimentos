@@ -8,22 +8,30 @@ output:
     fig_height: 6
     fig_caption: true
     number_sections: false 
-    toc: no
+    toc: yes
     toc_depth: 3
     toc_float:
         collapsed: no
         smooth_scroll: yes
+    css: "style.css"
 date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(Sys.time(), format = '%d de %B de %Y')`"
 ---
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
+
+<!-- Carregando fontes -->
+<style>
+  @@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+</style>
 
 <!-- Configuração do corpo do site -->
 <style>
   body {
     text-align: justify;
     line-height: 1.5;
-    background-color: #f4f4f4;
+    font-family: 'Nunito Sans', sans-serif;
+    
   }
 
 /* Estilos para telas menores que 600 pixels de largura */
@@ -37,34 +45,40 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
   .dataTables_wrapper .dataTables_filter,
   .dataTables_wrapper .dataTables_info,
   .dataTables_wrapper .dataTables_paginate {
-  font-size: 0.8rem; 
+    font-size: 0.8rem;
+    font-family: 'Nunito Sans', sans-serif;
+    color: #636363;
   
   }
 }
 
+/* Estilos específicos para os títulos e parágrafos no conteúdo do documento */
   h1 {
     color: #0066cc; /* Azul para títulos de nível 1 */
     font-size: 4rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   h2 {
     color: #3399ff; /* Azul claro para títulos de nível 2 */
     font-size: 2rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   h3 {
     color: #66b2ff; /* Azul ainda mais claro para títulos de nível 3 */
     font-size: 2rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   p {
-    color: #333333; /* Cor padrão para texto */
     font-size: 2rem;
+    font-family: 'Nunito Sans', sans-serif;
   }
 
 </style>
 
-
+<!-- Configuração dual-frames -->
 <style>
   .dual-frames {
     display: flex;
@@ -116,12 +130,154 @@ library(GetBCBData)
 
 Dados referentes a economia brasileira. Dados para auxiliar a entender a conjuntura econômica do nosso país.
 
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
 
-## PRODUTO 
+<div class="spacer"></div>
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+df.bcb <- gbcbd_get_series(id = 21774 ,
+                       first.date = '1900-01-01',
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE) %>% 
+  mutate(populacao = value * 1000)
+
+
+
+hchart(df.bcb, "column", hcaes(x = ref.date, y = populacao)) %>%
+   hc_yAxis(
+    title = list(text = "População"),
+    labels = list(
+      formatter = JS(
+        "function() { 
+          if (this.value >= 1e6) {
+            return Highcharts.numberFormat(this.value / 1e6, 0) + ' MM';
+          } else {
+            return Highcharts.numberFormat(this.value, 0, '.', ',');
+          }
+        }"
+      )
+    )
+  ) %>%
+  hc_xAxis(title = list(text = "Data")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "População brasileira") %>%
+  hc_subtitle(text = "Fonte: IBGE") %>%
+  hc_tooltip(
+    useHTML = TRUE,
+    headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
+    pointFormat = "<tr><td style='color:{point.color};padding:0'>{series.name}: </td><td style='padding:0'><b>{point.y:,.0f} pessoas</b></td></tr>",
+    footerFormat = "</table>",
+    shared = TRUE,
+    valueDecimals = 2
+  )
+
+
+```
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+for (i in 1402:1406) {
+  x <- bcb.sgs(i, '1900-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "Brasil - Comercial", 
+    "Brasil - Residencial",
+    "Brasil - Industrial",
+    "Brasil - Outros",
+    "Brasil - Total")
+
+df.bcb <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = "Consumo de energia elétrica") %>%
+  hc_subtitle(text = "Fonte: Eletrobras") %>%
+  hc_xAxis(title = list(text = "Meses",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_yAxis(title = list(text = "Gigawatts-hora",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
+
+
+```
+
+
+## PRODUTO {.toc}
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
 
 As métricas de produto buscam mensurar quantidade de riqueza gerada em um país, estado ou cidade, dentro de um período de tempo.
 
-### Produto Interno Bruto
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+### Produto Interno Bruto {.toc}
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
 
 O Produto Interno Bruto (PIB - *GDP/Gross Domestic Product*) é a soma de todos os bens e serviços finais produzidos por um país, estado ou cidade, geralmente em um ano.
 
@@ -186,7 +342,7 @@ Para chegar ao PIB, deve-se ainda considerar a *deprecisação do capital*, as *
 
 **Ótica do consumo**
 
-teste
+Essa é a metologia mais divulgada onde o PIB é mesurado pela soma do *consumo (C)*, *investimento (I)*, *gastos do governo (G)* e *balança comercial (X-M)*. Por este método utiliza os preços de aquisição dos bens e serviços finais. Quando não realizada a venda, a contabilidade considera que o produtor comprou de si mesmo. 
 
 <style>
   .spacer {
@@ -195,24 +351,169 @@ teste
 </style>
 
 <div class="spacer"></div>
-```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+*DADOS [BACEN SGS](https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries)*
+
+**PIB acumulado dos últimos 12 meses - Em US$ milhões - BCB SGS 4192**
+
+Oficialmente o IBGE calcula trimestralmente o PIB , entretanto, devido a utilização deste agregado econômico para formulação de políticas públicas e demais necessidades, o Departamento Econômico do Banco Central estima o PIB por meio da interpolação com dados já divulgados, realizando extrapolação do último valor divulgado do PIB Nominal, sofrendo revisões periódicas.
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
 df.bcb <- gbcbd_get_series(id = 4192 ,
-                       first.date = '2000-01-01',
+                       first.date = '1900-01-01',
                        last.date = Sys.Date(),
                        format.data = 'long',
                        use.memoise = TRUE, 
                        cache.path = tempdir(), # use tempdir for cache folder
                        do.parallel = FALSE)
+
+hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
+  hc_yAxis(title = list(text = "US$ milhões")) %>%
+  hc_xAxis(title = list(text = "Data")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(
+    useHTML = TRUE,
+    headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
+    pointFormat = "<tr><td style='color:{point.color};padding:0'>{series.name}: </td><td style='padding:0'><b>{point.y:.0f} MM US$</b></td></tr>",
+    footerFormat = "</table>",
+    shared = TRUE,
+    valueDecimals = 2
+  )
+
+
 ```
 
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
 
-### PIB per capita
+<div class="spacer"></div>
+
+**PIB per capita em US$ correntes - 21776**
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+df.bcb <- gbcbd_get_series(id = 21776 ,
+                       first.date = '1900-01-01',
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+
+hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
+  hc_yAxis(title = list(text = "US$",
+                        labels = list(
+      formatter = JS(
+        "function() { 
+          return Highcharts.numberFormat(this.value, 0, '.', ',');
+        }"
+          )
+  ) )) %>%
+  hc_xAxis(title = list(text = "Data")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_tooltip(
+    useHTML = TRUE,
+    headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
+    pointFormat = "<tr><td style='color:{point.color};padding:0'>{series.name}: </td><td style='padding:0'><b>{point.y:.0f} US$</b></td></tr>",
+    footerFormat = "</table>",
+    shared = TRUE,
+    valueDecimals = 2
+  )
+
+```
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+**PIB - taxa de variação real no ano - 7326 | 7327 |7328 | 7329**
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+for (i in 7326:7329) {
+  x <- bcb.sgs(i, '1900-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "PIB - taxa de variação real no ano", 
+    "PIB agropecuária - taxa de variação real no ano",
+    "PIB indústria - taxa de variação real no ano",
+    "PIB serviços - taxa de variação real no ano")
+
+df.bcb <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = " ") %>%
+  hc_subtitle(text = " ") %>%
+  hc_xAxis(title = list(text = "Anos")) %>%
+  hc_yAxis(title = list(text = "Variação % anual",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
 
 
-## MOEDA 
+```
 
-### Inflação {.tabset .tabset-fade .tabset-pills}
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+## MOEDA {.toc}
+
+
+
+### Inflação {.toc .tabset .tabset-fade .tabset-pills} 
 
 É o aumento generalizado e persistente do nível de preços de uma economia.
 
@@ -225,15 +526,39 @@ A inflação pode ter várias causas, que podem ser agrupadas em:
 - Inércia inflacionária
 - Expectativas de inflação
 
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
 **Consequências da inflação**
 
 A inflação descontrolada gera incertezas importantes na economia, desestimulando o investimento e, assim, prejudicando o crescimento econômico. Os preços relativos ficam distorcidos, gerando várias ineficiências na economia. As pessoas e as firmas perdem noção dos preços relativos e, assim, fica difícil avaliar se algo está barato ou caro. A inflação afeta particularmente as camadas menos favorecidas da população, pois essas têm menos acesso a instrumentos financeiros para se defender da inflação.
 
 Inflação mais alta também aumenta o custo da dívida pública, pois as taxas de juros da dívida pública têm de compensar não só o efeito da inflação mas também têm de incluir um prêmio de risco para compensar as incertezas associadas com a inflação mais alta.
 
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
 **Por que a deflação é também indesejável?**
 
 O Banco Central trabalha para manter a inflação baixa – não para que os preços declinem. A perspectiva de que os valores cobrados sejam relativamente estáveis ao longo do tempo, com inflação baixa e previsível, é importante para o planejamento de todos. Ao contrário do que possa parecer, preços em queda podem ser prejudiciais para o bom funcionamento da economia. Um comerciante poderá ter prejuízo se ganhar menos amanhã pelo estoque que fez hoje. As famílias e as empresas poderão adiar suas decisões de consumo e investimento se houver a perspectiva de que os preços serão mais baixos amanhã, deprimindo a atividade econômica.
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
 
 #### IPCA {.tabset .tabset-fade .tabset-pills}
 
@@ -511,6 +836,14 @@ A cesta de ambos é definida pela [Pesquisa de Orçamentos Familiares](https://w
 
 Os índices, portanto, levam em conta não apenas a variação de preço de cada item, mas também o peso que ele tem no orçamento das famílias.
 
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
 [Tabela 7063](https://sidra.ibge.gov.br/tabela/7063)
 
 ##### Índice {.tabset .tabset-fade .tabset-pills}
@@ -717,31 +1050,31 @@ last.date = Sys.Date()
 
 ```
 
-### Juros
+### Juros {.toc} 
 
 selic
 
-### Estoque
+### Estoque {.toc} 
 
 m1
 
-### B. pagamentos
+### B. pagamentos {.toc} 
 
 tabela dos saldos
 
-## GOVERNO 
+## GOVERNO {.toc}
 
-### Defict fiscal
+### Defict fiscal {.toc} 
 
-### Emissão de dívidas
+### Emissão de dívidas {.toc} 
 
-## MERCADO NACIONAL  
+## MERCADO NACIONAL {.toc}
 
-### CAGED
+### CAGED {.toc} 
 
-### PNAD
+### PNAD {.toc} 
 
-### PMC {.tabset .tabset-fade .tabset-pills}
+### PMC {.toc .tabset .tabset-fade .tabset-pills}
 
 A Pesquisa Mensal do Comércio - PMC é uma pesquisa por amostragem probabilística, realizada em todas as Unidades da Federação.
 
@@ -890,7 +1223,7 @@ hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL 
 
 ```
 
-### PMS {.tabset .tabset-fade .tabset-pills}
+### PMS {.toc .tabset .tabset-fade .tabset-pills}
 
 A Pesquisa Mensal de Serviços - PMS tem como objetivo produzir indicadores que permitam acompanhar o comportamento conjuntural dos principais segmentos empresariais não-financeiros do setor de serviços, excluindo-se os da saúde e da educação, complementando, através da análise de curto prazo, o mapeamento da estrutura das atividades de serviços no País, efetuado pela Pesquisa Anual de Serviços - PAS. 
 
@@ -954,9 +1287,9 @@ hchart(PMS, "column", hcaes(x = Data, y = PMS_MENSAL, color = ifelse(PMS_MENSAL 
 
 ```
 
-### PMI 
+### PMI {.toc} 
 
-### Cielo
+### Cielo {.toc}
 
-### Carros
+### Carros {.toc}
 
