@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -62,6 +62,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="style.css" type="text/css" />
 
 
 
@@ -361,45 +362,96 @@ div.tocify {
 
 
 <h1 class="title toc-ignore">DADOS ECONÔMICOS DOS DEMAIS PAÍSES</h1>
-<h4 class="date">Atualizado em 18 de janeiro de 2024</h4>
+<h4 class="date">Atualizado em 25 de janeiro de 2024</h4>
 
 </div>
 
 
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
+<!-- Carregando fontes -->
+<style>
+  @@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+</style>
 <!-- Configuração do corpo do site -->
 <style>
   body {
     text-align: justify;
     line-height: 1.5;
-    background-color: #f4f4f4;
+    font-family: 'Nunito Sans', sans-serif;
+    
   }
 
 /* Estilos para telas menores que 600 pixels de largura */
 @media only screen and (max-width: 600px) {
   body {
     margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
+    font-size: 2rem;
+  }
+
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate {
+    font-size: 0.8rem;
+    font-family: 'Nunito Sans', sans-serif;
+    color: #636363;
+  
   }
 }
 
+/* Estilos específicos para os títulos e parágrafos no conteúdo do documento */
   h1 {
     color: #0066cc; /* Azul para títulos de nível 1 */
+    font-size: 4rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   h2 {
     color: #3399ff; /* Azul claro para títulos de nível 2 */
+    font-size: 2rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   h3 {
     color: #66b2ff; /* Azul ainda mais claro para títulos de nível 3 */
+    font-size: 2rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   p {
-    font-size: 16px; /* Tamanho da fonte para parágrafos */
-    color: #333333; /* Cor padrão para texto */
+    font-size: 2rem;
+    font-family: 'Nunito Sans', sans-serif;
   }
 
+</style>
+<!-- Configuração dual-frames -->
+<style>
+  .dual-frames {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .frame {
+    width: 48%;
+    border: 0.2rem solid #ddd;
+    padding: 0.8rem;
+    box-sizing: border-box;
+    font-size: 1rem; /* Exemplo de tamanho de fonte para os quadros usando unidades relativas */
+
+    /* Adicione uma margem inferior para espaçamento entre os quadros */
+    margin-bottom: 1em;
+  }
+
+  /* Estilos para telas menores que 600 pixels de largura */
+  @media only screen and (max-width: 600px) {
+  body {
+    margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
+    font-size: 2rem;
+    }
+  }
 </style>
 <div id="internacional" class="section level1">
 <h1>INTERNACIONAL</h1>

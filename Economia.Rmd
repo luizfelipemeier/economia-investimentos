@@ -2,7 +2,7 @@
 title: "DADOS DA ECONOMIA BRASILEIRA"
 output: 
   bookdown::html_document2:
-    theme: readable
+    theme: lumen
     split_by: "section"
     fig_width: 7
     fig_height: 6
@@ -354,7 +354,7 @@ Essa é a metologia mais divulgada onde o PIB é mesurado pela soma do *consumo 
 
 *DADOS [BACEN SGS](https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries)*
 
-**PIB acumulado dos últimos 12 meses - Em US$ milhões - BCB SGS 4192**
+**PIB - acumulado dos últimos 12 meses - Em US$ milhões - BCB SGS 4192**
 
 Oficialmente o IBGE calcula trimestralmente o PIB , entretanto, devido a utilização deste agregado econômico para formulação de políticas públicas e demais necessidades, o Departamento Econômico do Banco Central estima o PIB por meio da interpolação com dados já divulgados, realizando extrapolação do último valor divulgado do PIB Nominal, sofrendo revisões periódicas.
 
@@ -382,6 +382,7 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
   hc_legend(enabled = FALSE) %>%
   hc_plotOptions(column = list(stacking = "normal")) %>%
   hc_title(text = "") %>%
+  hc_subtitle(text = "Fonte: BCB - Depec")  %>%
   hc_tooltip(
     useHTML = TRUE,
     headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
@@ -402,7 +403,7 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
 
 <div class="spacer"></div>
 
-**PIB per capita em US$ correntes - 21776**
+**PIB per capita - US$ correntes - 21776**
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
@@ -427,6 +428,7 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
   hc_legend(enabled = FALSE) %>%
   hc_plotOptions(column = list(stacking = "normal")) %>%
   hc_title(text = "") %>%
+  hc_subtitle(text = "Fonte: BCB - Depec")  %>%
   hc_tooltip(
     useHTML = TRUE,
     headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
@@ -491,13 +493,67 @@ df.bcb <- df.bcb %>%
 ## Plotando gráficos
 hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
   hc_title(text = " ") %>%
-  hc_subtitle(text = " ") %>%
+  hc_subtitle(text = "FONTE: IBGE") %>%
   hc_xAxis(title = list(text = "Anos")) %>%
   hc_yAxis(title = list(text = "Variação % anual",
                         style = list(fontWeight = "bold",
                                      fontsize = "2rem"))) %>%
   hc_legend(enabled = TRUE)
 
+
+```
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+**PIB - Preços correntes de 1990 - 1207**
+
+Os dados das Contas Nacionais Trimestrais (CNT), a preços constantes de 1990, são apresentados em uma série encadeada de índices de volume. Os dados são compilados pelo método da produção e cobrem toda a economia brasileira. O PIB em preços correntes mede o valor total de bens e serviços para uso final produzidos durante o trimestre antes da dedução do consumo de capital fixo.
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+df.bcb <- gbcbd_get_series(id = 1207 ,
+                       first.date = '1990-01-01',
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+
+hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
+  hc_yAxis(title = list(text = "RS",
+                        labels = list(
+                          formatter = JS(
+                            "function() { 
+                              return Highcharts.numberFormat(this.value, 0, '.', ',');
+                            }"
+                          )
+                        )
+  )) %>%
+  hc_xAxis(title = list(text = "Data")) %>%
+  hc_legend(enabled = FALSE) %>%
+  hc_plotOptions(column = list(stacking = "normal")) %>%
+  hc_title(text = "") %>%
+  hc_subtitle(text = "Fonte: IBGE")  %>%
+  hc_tooltip(
+    useHTML = TRUE,
+    headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
+    pointFormatter = JS(
+      "function() {
+        return '<tr><td style=\"color:' + this.color + ';padding:0\">' + this.series.name + ': </td>' +
+               '<td style=\"padding:0\"><b>' + (this.y / 1e12).toFixed(2) + ' T R$</b></td></tr>';
+      }"
+    ),
+    footerFormat = "</table>",
+    shared = TRUE,
+    valueDecimals = 2
+  )
 
 ```
 
@@ -561,7 +617,13 @@ O Banco Central trabalha para manter a inflação baixa – não para que os pre
 <div class="spacer"></div>
 
 #### IPCA {.tabset .tabset-fade .tabset-pills}
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
 
+<div class="spacer"></div>
 O IPCA mede a variação de preços de uma cesta de produtos e serviços consumida pela população. O resultado mostra se os preços aumentaram ou diminuíram de um mês para o outro.
 
 A cesta é definida pela [Pesquisa de Orçamentos Familiares](https://www.ibge.gov.br/estatisticas/sociais/populacao/24786-pesquisa-de-orcamentos-familiares-2.html?utm_source=landing&utm_medium=explica&utm_campaign=inflacao) - POF, do IBGE, que, entre outras questões, verifica o que a população consome e quanto do rendimento familiar é gasto em cada produto: arroz, feijão, passagem de ônibus, material escolar, médico, cinema, entre outros.
@@ -827,7 +889,13 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 ##### Localidade
 
 #### INPC {.tabset .tabset-fade .tabset-pills}
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
 
+<div class="spacer"></div>
 O INPC verifica a variação do custo de vida médio apenas de famílias<span style="font-weight: bold; color: #ff6600;"> com renda mensal de 1 a 5 salários mínimos</span>. Esses grupos são mais sensíveis às variações de preços, pois tendem a gastar todo o seu rendimento em itens básicos, como alimentação, medicamentos, transporte etc
 
 O propósito do INPC e IPCA são o mesmo: medir a variação de preços de uma cesta de produtos e serviços consumida pela população. O resultado mostra se os preços aumentaram ou diminuíram de um mês para o outro.
@@ -1037,18 +1105,203 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 
 #### IPGM
 
-O ig..
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
 
-```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+<div class="spacer"></div>
 
-IPGM <- GetBCBData::gbcbd_get_series(
-id = 189,
-first.date = "1989-01-01",
-last.date = Sys.Date()
-)
+O indicador foi concebido no final dos anos de 1940 para ser uma medida abrangente do movimento de preços, que englobasse não apenas diferentes atividades como também etapas distintas do processo produtivo. Dessa forma, o IGP é um indicador mensal do nível de atividade econômica do país, englobando seus principais setores.
+
+O cálculo do indicador, assim como os outros dois indicadores (IGP-10 e IGP-DI), tem em conta a variação de preços de bens e serviços, bem como de matérias-primas utilizadas na produção agrícola, industrial e construção civil. Dessa forma, o resultado do IGP-M é a <span style="font-weight: bold; color: #ff6600;">média aritmética ponderada da inflação ao produtor (IPA), consumidor (IPC) e construção civil (INCC)</span>.
+
+- Índice de Preços ao Produtor Amplo (IPA);
+- Índice de Preços ao Consumidor (IPC);
+- Índice Nacional de Custo da Construção (INCC).
+
+Os pesos de cada um dos índices componentes correspondem a parcelas da despesa interna bruta, calculadas com base nas Contas Nacionais – resultando na seguinte distribuição:
+
+- 60% para o IPA;
+- 30% para o IPC;
+- 10% para o INCC.
+
+Nesse contexto, o IPA é o indicador que monitora a variação de preços percebidos por produtores, ao passo que o IPC acompanha o comportamento dos preços que impactam diretamente o consumidor final. Por fim, o INCC apresenta os custos para a construção civil, em uma análise que leva em conta a variação de preços de materiais de construção e custo de mão de obra especializada.
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(7450,7456,7453,189)
+
+for (i in I) {
+  x <- bcb.sgs(i, '1900-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "IPA-M", 
+    "INCC-M",
+    "IPC-M",
+    "IGP-M")
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = " ") %>%
+  hc_subtitle(text = "Fonte: FGV") %>%
+  hc_xAxis(title = list(text = "Meses",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_yAxis(title = list(text = "Percentual",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
 
 
 ```
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(7450,7456,7453,189)
+
+for (i in I) {
+  x <- bcb.sgs(i, '1900-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "IPA-M", 
+    "INCC-M",
+    "IPC-M",
+    "IGP-M")
+
+# Crie um segundo dataframe para armazenar as variações anuais
+df.bcb_MENSAL <- cbind(df.bcb[, 1],((df.bcb[, 2:5] /100) + 1))
+
+# Criar um dataframe vazio para df.bcb_anual
+df.bcb_anual <- df.bcb_MENSAL
+
+# Loop para calcular a variação anual para cada coluna
+for (i in 2:5) {
+  col_nome <- paste0(colnames(df.bcb_MENSAL)[i], "_anual")
+
+  # Inicializar a coluna com NA se ainda não existir
+  if (!(col_nome %in% colnames(df.bcb_anual))) {
+    df.bcb_anual[[col_nome]] <- NA
+  }
+
+  for (j in 12:nrow(df.bcb_MENSAL)) {
+    df.bcb_anual[[col_nome]][j] <- (prod(df.bcb_MENSAL[[i]][j:(j-11)]) - 1) * 100
+  }
+}
+
+df.bcb_anual <- df.bcb_anual[12:nrow(df.bcb_anual),c(1,6:9)]
+
+colnames(df.bcb_anual) <- c("data",
+    "IPA-M", 
+    "INCC-M",
+    "IPC-M",
+    "IGP-M")
+
+df.bcb_anual <- df.bcb_anual %>% 
+  select(data, `IGP-M`, `IPA-M`,`IPC-M`,`INCC-M`)
+
+df.bcb_anual <- arrange(df.bcb_anual, desc(data)) %>% 
+  mutate(data = format(data, "%b-%Y"))
+
+colunas_para_formatar <- colnames(df.bcb_anual)[2:5]
+
+datatable(df.bcb_anual, options = list(
+  pageLength = 10,
+  autoWidth = TRUE,
+  columnDefs = list(list(className = 'dt-center', targets = '_all'))
+), caption = "Variação percentual anual", width = "100%", class = "display nowrap") %>% 
+  formatRound(
+    columns = colunas_para_formatar,
+    digits = 2
+  )
+
+
+```
+
+
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
 
 ### Juros {.toc} 
 

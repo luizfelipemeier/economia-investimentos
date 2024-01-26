@@ -1,0 +1,19 @@
+/* Estilos para o sidebar */
+.sidebar {
+  width: 25%; /* Ajuste a largura conforme necessário */
+  float: left;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Estilos para cada parte do sidebar */
+.sidebar-part {
+  margin-bottom: 20px;
+}
+
+/* Clearfix para evitar problemas de layout */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}

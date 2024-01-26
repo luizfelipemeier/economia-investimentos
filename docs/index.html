@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/readable.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -28,6 +28,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -59,6 +62,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="style.css" type="text/css" />
 
 
 
@@ -220,6 +224,75 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
 
 </head>
 
@@ -227,6 +300,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -279,50 +362,117 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Projeto pessoal</h1>
-<h4 class="date">Atualizado em 18 de janeiro de 2024)</h4>
+<h4 class="date">Atualizado em 25 de janeiro de 2024</h4>
 
 </div>
 
 
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
+<!-- Carregando fontes -->
+<style>
+  @@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+</style>
 <!-- Configuração do corpo do site -->
 <style>
   body {
     text-align: justify;
     line-height: 1.5;
-    background-color: #f4f4f4;
+    font-family: 'Nunito Sans', sans-serif;
+    
   }
 
 /* Estilos para telas menores que 600 pixels de largura */
 @media only screen and (max-width: 600px) {
   body {
     margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
+    font-size: 2rem;
+  }
+
+  .dataTables_wrapper .dataTables_length,
+  .dataTables_wrapper .dataTables_filter,
+  .dataTables_wrapper .dataTables_info,
+  .dataTables_wrapper .dataTables_paginate {
+    font-size: 0.8rem;
+    font-family: 'Nunito Sans', sans-serif;
+    color: #636363;
+  
   }
 }
 
+/* Estilos específicos para os títulos e parágrafos no conteúdo do documento */
   h1 {
     color: #0066cc; /* Azul para títulos de nível 1 */
+    font-size: 4rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   h2 {
     color: #3399ff; /* Azul claro para títulos de nível 2 */
+    font-size: 2rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   h3 {
     color: #66b2ff; /* Azul ainda mais claro para títulos de nível 3 */
+    font-size: 2rem;
+    font-family: "Bebas Neue", sans-serif;
   }
-
+  
   p {
-    font-size: 16px; /* Tamanho da fonte para parágrafos */
-    color: #333333; /* Cor padrão para texto */
+    font-size: 2rem;
+    font-family: 'Nunito Sans', sans-serif;
   }
 
 </style>
-<p>Site em construção..</p>
+<!-- Configuração dual-frames -->
+<style>
+  .dual-frames {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .frame {
+    width: 48%;
+    border: 0.2rem solid #ddd;
+    padding: 0.8rem;
+    box-sizing: border-box;
+    font-size: 1rem; /* Exemplo de tamanho de fonte para os quadros usando unidades relativas */
+
+    /* Adicione uma margem inferior para espaçamento entre os quadros */
+    margin-bottom: 1em;
+  }
+
+  /* Estilos para telas menores que 600 pixels de largura */
+  @media only screen and (max-width: 600px) {
+  body {
+    margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
+    font-size: 2rem;
+    }
+  }
+</style>
+<div id="teste" class="section level1">
+<h1>teste</h1>
+<p>texto</p>
+<div id="teste-2" class="section level2">
+<h2>teste 2</h2>
+<p>texto</p>
+</div>
+<div id="teste-2-1" class="section level2">
+<h2>teste 2</h2>
+<p>texo</p>
+</div>
+</div>
+<div id="teste-1" class="section level1">
+<h1>teste</h1>
+</div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -355,6 +505,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
