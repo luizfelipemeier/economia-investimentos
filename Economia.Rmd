@@ -1329,7 +1329,7 @@ tabela dos saldos
 
 ### PMC {.toc .tabset .tabset-fade .tabset-pills}
 
-A Pesquisa Mensal do Comércio - PMC é uma pesquisa por amostragem probabilística, realizada em todas as Unidades da Federação.
+A *Pesquisa Mensal do Comércio* - PMC é uma pesquisa por amostragem probabilística, realizada em todas as Unidades da Federação.
 
 O objetivo contemplado no desenho da amostra é a obtenção de estimativas dos totais populacionais referentes à variável receita bruta de revenda, por Unidade da Federação e por atividade PMC, utilizadas para construir os indicadores da pesquisa que são divulgados mensalmente. A unidade de investigação da PMC é a empresa, sendo também a unidade amostral, ou seja, a unidade utilizada para a seleção e expansão da amostra.
 
@@ -1478,7 +1478,7 @@ hchart(PMC, "column", hcaes(x = Data, y = PMC_MENSAL, color = ifelse(PMC_MENSAL 
 
 ### PMS {.toc .tabset .tabset-fade .tabset-pills}
 
-A Pesquisa Mensal de Serviços - PMS tem como objetivo produzir indicadores que permitam acompanhar o comportamento conjuntural dos principais segmentos empresariais não-financeiros do setor de serviços, excluindo-se os da saúde e da educação, complementando, através da análise de curto prazo, o mapeamento da estrutura das atividades de serviços no País, efetuado pela Pesquisa Anual de Serviços - PAS. 
+A *Pesquisa Mensal de Serviços* - PMS tem como objetivo produzir indicadores que permitam acompanhar o comportamento conjuntural dos principais segmentos empresariais não-financeiros do setor de serviços, excluindo-se os da saúde e da educação, complementando, através da análise de curto prazo, o mapeamento da estrutura das atividades de serviços no País, efetuado pela Pesquisa Anual de Serviços - PAS. 
 
 [Tabela 5906](https://sidra.ibge.gov.br/tabela/5906)
 
