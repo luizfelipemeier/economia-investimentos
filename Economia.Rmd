@@ -106,6 +106,29 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
   }
 </style>
 
+<!-- Centralizar as imagens -->
+<style>
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+
+<!-- Espacamento entre os titulos -->
+<style>
+  .spacer {
+    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
+  }
+</style>
+
+<div class="spacer"></div>
+
 
 ```{r include=FALSE}
 
@@ -123,18 +146,18 @@ library(forcats)
 library(plotly)
 library(highcharter)
 library(GetBCBData)
+library(rvest)
+library(RSelenium)
+library(wdman)
+library(netstat)
+library(htmlTable)
+
 
 ```
 
 # BRASIL
 
 Dados referentes a economia brasileira. Dados para auxiliar a entender a conjuntura econômica do nosso país.
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -183,14 +206,7 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = populacao)) %>%
 
 ```
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
-
 
 ```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
@@ -251,42 +267,19 @@ hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 
 ## PRODUTO {.toc}
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
 As métricas de produto buscam mensurar quantidade de riqueza gerada em um país, estado ou cidade, dentro de um período de tempo.
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
 ### Produto Interno Bruto {.toc}
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
 O Produto Interno Bruto (PIB - *GDP/Gross Domestic Product*) é a soma de todos os bens e serviços finais produzidos por um país, estado ou cidade, geralmente em um ano.
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
+<div class="spacer"></div>
 <div class="spacer"></div>
 <div class="dual-frames">
 <div class="frame">
@@ -296,33 +289,16 @@ O Produto Interno Bruto (PIB - *GDP/Gross Domestic Product*) é a soma de todos 
 *An [IMF](https://en.wikipedia.org/wiki/International_Monetary_Fund) publication states that, "GDP measures the monetary value of final goods and services—that are bought by the final user—produced in a country in a given period (say a quarter or a year)."*
 </div>
 </div>
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
 Existem três metodologias de cálculo do PIB, sendo que teoricamente todas elas chegam ao mesmo valor final.
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
 **Ótica da oferta ou produção**
 
 Também conhecida como *método do valor adicionado*, calcula o montante que cada estágio da produção agrega ao produto. Primeiro estima-se o do *valor adicionado bruto* fabricado das diversas atividades econômicas.Posteriormente estima-se o valor do *consumo intermediário*, onde considera os custos dos bens e serviços utilizados para produzir os bens e serviços finais. Ademais, subtrai o valor doméstico bruto do valor intermediário. Por fim, *subtrai os valores dos impostos indiretos e soma os valores dos subsídios*. 
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -332,23 +308,11 @@ O método inicia com o somatório dos *salários, vencimentos e rendimentos* rec
 Este somatório resulta no rendimento doméstico líquido dos custos dos fatores.
 Para chegar ao PIB, deve-se ainda considerar a *deprecisação do capital*, as *taxas de produção e importação* e os *subsídios* estatais. 
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
 **Ótica do consumo**
 
 Essa é a metologia mais divulgada onde o PIB é mesurado pela soma do *consumo (C)*, *investimento (I)*, *gastos do governo (G)* e *balança comercial (X-M)*. Por este método utiliza os preços de aquisição dos bens e serviços finais. Quando não realizada a venda, a contabilidade considera que o produtor comprou de si mesmo. 
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -357,12 +321,6 @@ Essa é a metologia mais divulgada onde o PIB é mesurado pela soma do *consumo 
 **PIB - acumulado dos últimos 12 meses - Em US$ milhões - BCB SGS 4192**
 
 Oficialmente o IBGE calcula trimestralmente o PIB , entretanto, devido a utilização deste agregado econômico para formulação de políticas públicas e demais necessidades, o Departamento Econômico do Banco Central estima o PIB por meio da interpolação com dados já divulgados, realizando extrapolação do último valor divulgado do PIB Nominal, sofrendo revisões periódicas.
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -394,12 +352,6 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
 
 
 ```
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -439,12 +391,6 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
   )
 
 ```
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -503,12 +449,6 @@ hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 
 ```
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
 **PIB - Preços correntes de 1990 - 1207**
@@ -557,12 +497,6 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
 
 ```
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
 ## MOEDA {.toc}
@@ -582,12 +516,6 @@ A inflação pode ter várias causas, que podem ser agrupadas em:
 - Inércia inflacionária
 - Expectativas de inflação
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
 **Consequências da inflação**
@@ -596,34 +524,150 @@ A inflação descontrolada gera incertezas importantes na economia, desestimulan
 
 Inflação mais alta também aumenta o custo da dívida pública, pois as taxas de juros da dívida pública têm de compensar não só o efeito da inflação mas também têm de incluir um prêmio de risco para compensar as incertezas associadas com a inflação mais alta.
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
 **Por que a deflação é também indesejável?**
 
 O Banco Central trabalha para manter a inflação baixa – não para que os preços declinem. A perspectiva de que os valores cobrados sejam relativamente estáveis ao longo do tempo, com inflação baixa e previsível, é importante para o planejamento de todos. Ao contrário do que possa parecer, preços em queda podem ser prejudiciais para o bom funcionamento da economia. Um comerciante poderá ter prejuízo se ganhar menos amanhã pelo estoque que fez hoje. As famílias e as empresas poderão adiar suas decisões de consumo e investimento se houver a perspectiva de que os preços serão mais baixos amanhã, deprimindo a atividade econômica.
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
+<div class="spacer"></div>
+
+**Metas para a inflação**
+
+Inflação baixa, estável e previsível traz vários benefícios para a sociedade. A economia pode crescer mais, pois a incerteza na economia é menor, as pessoas podem planejar melhor seu futuro e as famílias não têm sua renda real corroída. Para alcançar esse objetivo, o Brasil adota o regime de metas para a inflação, que está em vigor desde 1999.
+
+Esse regime tem sido exitoso no Brasil e no amplo conjunto de países que o adotam. Por esse sistema, os bancos centrais atuam para que a inflação efetiva esteja em linha com uma meta pré-estabelecida. Nesse sistema, a meta para a inflação é anunciada publicamente e funciona como uma âncora para as expectativas dos agentes sobre a inflação futura, permitindo que desvios da inflação em relação à meta sejam corrigidos ao longo do tempo.
+
+No Brasil, a meta para a inflação é definida pelo Conselho Monetário Nacional (CMN) e cabe ao Banco Central (BC) adotar as medidas necessárias para alcançá-la. O índice de preços utilizado é o Índice Nacional de Preços ao Consumidor Amplo (IPCA), calculado pelo Instituto Brasileiro de Geografia e Estatística (IBGE). A meta se refere à inflação acumulada no ano. Por exemplo, a meta para 2023 é de uma inflação de 3,25%.
+
+No desenho atual do sistema, o CMN define em junho a meta para a inflação de três anos-calendário à frente. Por exemplo, em junho de 2018, o CMN definiu a meta para 2021. Esse horizonte mais longo reduz incertezas e melhora a capacidade de planejamento das famílias, empresas e governo.
+
+O sistema prevê ainda um intervalo de tolerância, também definido pelo CMN. Nos últimos anos, o CMN tem definido um intervalo de 1,5 ponto percentual (p.p.) para cima e para baixo. Por exemplo, no caso de 2025, a meta é de 3,00% e o intervalo é de 1,50% a 4,50%. Se a inflação ao final do ano se situar fora do intervalo de tolerância, o presidente do BC tem de divulgar publicamente as razões do descumprimento, por meio de carta aberta ao Ministro da Fazenda, presidente do CMN, contendo descrição detalhada das causas do descumprimento, as providências para assegurar o retorno da inflação aos limites estabelecidos e o prazo no qual se espera que as providências produzam efeito.
+
+Em termos gerais, o regime de metas para a inflação envolve os seguintes elementos:
+
+- Conhecimento público e prévio da meta para a inflação;
+- Autonomia do banco central na adoção das medidas necessárias para o cumprimento da meta;
+- Comunicação transparente e regular sobre os objetivos e justificativas das decisões da política monetária;
+- Mecanismos de incentivo e responsabilização/prestação de contas para que a autoridade monetária cumpra a meta.
+
+<div class="spacer"></div>
+<div class="dual-frames">
+<div class="frame">
+
+![Fonte: [Banco Central do Brasil](https://www.bcb.gov.br/controleinflacao/metainflacao)](Images/inflacao.png){.img-responsive .center}
+
+</div>
+<div class="frame">
+
+```{r include=FALSE}
+
+driver <- rsDriver(browser = "firefox", port = free_port())
+
+remDr <- driver$client
+
+remDr$navigate("https://www.bcb.gov.br/controleinflacao/historicometas")
+
+# Aguarda um curto período de tempo para garantir que a página seja carregada
+Sys.sleep(5)
+
+# Obtém o conteúdo HTML da página atual
+page_content <- remDr$getPageSource()[[1]]
+
+# Utilizar a função read_html do pacote rvest para analisar o HTML
+page_html <- read_html(page_content)
+
+# Encontrar o nó da tabela dentro do div com classe "table-responsive"
+table_node <- page_html %>% html_node("div.table-responsive table")
+
+# Extrair a tabela usando html_table
+tabela <- html_table(table_node, fill = TRUE)
+
+# Converter a tabela em um dataframe
+df <- as.data.frame(tabela)
+
+# Fecha a conexão com o Selenium
+remDr$close()
+driver$server$stop()
+
+
+
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.width='100%'}
+
+if(nrow(df)>1){
+        # Excluir a linha do ano 2003* e 2004*
+        df <- df %>% filter(Ano != "2003*") %>% filter(Ano != "2004*")
+        
+        # Adicionar as novas linhas
+        #nova_linha1 <- c("2003", "Resolução CMN nº 2.842", "28/6/2001", "3,25", "2", "1,25-5,25", "9,30")
+        #nova_linha2 <- c("2003", "Resolução CMN nº 2.972", "27/6/2002", "4", "2,5", "1,5-6,5", "9,3")
+        #nova_linha3 <- c("2004", "Resolução CMN nº 2.972", "27/6/2002", "3,75", "2,5", "1,25-6,25", "7,60")
+        #nova_linha4 <- c("2004", "Resolução CMN nº 3.108", "25/6/2003", "5,5", "2,5", "3-8", "7,60")
+        
+        #df <- rbind(df, nova_linha1)
+        #df <- rbind(df, nova_linha2)
+        #df <- rbind(df, nova_linha3)
+        #df <- rbind(df, nova_linha4)
+        
+        df <- arrange(df, desc(Ano))
+        df <- df %>% filter(Ano>=2005)
+        df <- df %>% separate("Intervalode tolerância (%)", 
+                              into = c("Intervalo_inferior", 
+                                       "Intervalo_superior"), 
+                              sep = "-")
+        df <- df %>% 
+          mutate(Meta = `Meta (%)`)
+        df <- df %>% select(Ano, Meta, Intervalo_inferior,Intervalo_superior)
+        
+        # Transformando coluna ano em data
+        df$Ano <- as.Date(paste0(df$Ano, "-01-01"))
+        
+        
+        
+        # Substituir vírgulas por pontos apenas nas colunas numéricas
+        df <- df %>% 
+          mutate(across(c(Meta, Intervalo_inferior, Intervalo_superior), ~as.numeric(gsub(",", ".", .))))
+        # Numero problematico
+        df$Meta[df$Ano == as.Date("2020-01-01")] <- "4.0"
+        
+        # Transformar Ano em formato de texto para evitar problemas de exibição
+        df$Ano <- as.character(df$Ano)
+
+        
+        # Criar o gráfico com highcharter
+        plot_ly(df, x = ~Ano, y = ~Meta, name = "Meta", type = "scatter", mode = "lines") %>%
+        add_trace(x = ~Ano, y = ~Intervalo_inferior, name = "Intervalo_inferior", type = "scatter", mode = "lines", line = list(dash = "dash")) %>%
+        add_trace(x = ~Ano, y = ~Intervalo_superior, name = "Intervalo_superior", type = "scatter", mode = "lines", line = list(dash = "dash")) %>%
+        layout(
+          title = "Metas da inflação - CMN",
+          yaxis = list(title = "Variação %"),
+          xaxis = list(title = "Ano"),
+          legend = list(x = 0.5, y = -0.2, orientation = "h")  # Posição e orientação da legenda
+        )
+        
+        
+}else{
+  
+  print("Não foi possível carregar :(")
+  
+  
+}
+
+
+
+```
+
+</div>
+</div>
 
 <div class="spacer"></div>
 
 #### IPCA {.tabset .tabset-fade .tabset-pills}
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
+
 O IPCA mede a variação de preços de uma cesta de produtos e serviços consumida pela população. O resultado mostra se os preços aumentaram ou diminuíram de um mês para o outro.
 
 A cesta é definida pela [Pesquisa de Orçamentos Familiares](https://www.ibge.gov.br/estatisticas/sociais/populacao/24786-pesquisa-de-orcamentos-familiares-2.html?utm_source=landing&utm_medium=explica&utm_campaign=inflacao) - POF, do IBGE, que, entre outras questões, verifica o que a população consome e quanto do rendimento familiar é gasto em cada produto: arroz, feijão, passagem de ônibus, material escolar, médico, cinema, entre outros.
@@ -889,13 +933,9 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 ##### Localidade
 
 #### INPC {.tabset .tabset-fade .tabset-pills}
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
+
 O INPC verifica a variação do custo de vida médio apenas de famílias<span style="font-weight: bold; color: #ff6600;"> com renda mensal de 1 a 5 salários mínimos</span>. Esses grupos são mais sensíveis às variações de preços, pois tendem a gastar todo o seu rendimento em itens básicos, como alimentação, medicamentos, transporte etc
 
 O propósito do INPC e IPCA são o mesmo: medir a variação de preços de uma cesta de produtos e serviços consumida pela população. O resultado mostra se os preços aumentaram ou diminuíram de um mês para o outro.
@@ -903,12 +943,6 @@ O propósito do INPC e IPCA são o mesmo: medir a variação de preços de uma c
 A cesta de ambos é definida pela [Pesquisa de Orçamentos Familiares](https://www.ibge.gov.br/estatisticas/sociais/populacao/24786-pesquisa-de-orcamentos-familiares-2.html?utm_source=landing&utm_medium=explica&utm_campaign=inflacao) - POF, do IBGE, que, entre outras questões, verifica o que a população consome e quanto do rendimento familiar é gasto em cada produto: arroz, feijão, passagem de ônibus, material escolar, médico, cinema, entre outros.
 
 Os índices, portanto, levam em conta não apenas a variação de preço de cada item, mas também o peso que ele tem no orçamento das famílias.
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -1103,13 +1137,7 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 ##### Localidade
 
 
-#### IPGM
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
+#### IPGM {.tabset .tabset-fade .tabset-pills}
 
 <div class="spacer"></div>
 
@@ -1128,12 +1156,6 @@ Os pesos de cada um dos índices componentes correspondem a parcelas da despesa 
 - 10% para o INCC.
 
 Nesse contexto, o IPA é o indicador que monitora a variação de preços percebidos por produtores, ao passo que o IPC acompanha o comportamento dos preços que impactam diretamente o consumidor final. Por fim, o INCC apresenta os custos para a construção civil, em uma análise que leva em conta a variação de preços de materiais de construção e custo de mão de obra especializada.
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
 
 <div class="spacer"></div>
 
@@ -1196,13 +1218,68 @@ hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 
 ```
 
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
+
+##### Mensal
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(7450,7456,7453,189)
+
+for (i in I) {
+  x <- bcb.sgs(i, '1900-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "IPA-M", 
+    "INCC-M",
+    "IPC-M",
+    "IGP-M")
+
+df.bcb <- arrange(df.bcb, desc(data))
+colunas_para_formatar <- colnames(df.bcb)[2:5]
+
+datatable(df.bcb, options = list(
+  pageLength = 10,
+  autoWidth = TRUE,
+  columnDefs = list(list(className = 'dt-center', targets = '_all'))
+), caption = "Variação percentual anual", width = "100%", class = "display nowrap") %>% 
+  formatRound(
+    columns = colunas_para_formatar,
+    digits = 2
+  )
+
+
+```
+
+##### Acumulado 12 meses
 
 ```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
@@ -1294,18 +1371,75 @@ datatable(df.bcb_anual, options = list(
 
 ```
 
-
-<style>
-  .spacer {
-    height: 2rem; /* Ajuste conforme necessário para o tamanho desejado */
-  }
-</style>
-
 <div class="spacer"></div>
 
-### Juros {.toc} 
+### Juros {.toc .tabset .tabset-fade .tabset-pills}
 
-selic
+O juro nada mais é do que o valor do dinheiro no tempo. Cada país possui diferenças quanto ao tipo de juros, devendo sempre se atentar ao contrato. No caso brasileiro, usamos juros compostos com base de 252 dias úteis. Na maioria dos demais países, usa-se juros simples na base 360. 
+
+#### SELIC
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(7450,7456,7453,189)
+
+for (i in I) {
+  x <- bcb.sgs(i, '1900-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "IPA-M", 
+    "INCC-M",
+    "IPC-M",
+    "IGP-M")
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = " ") %>%
+  hc_subtitle(text = "Fonte: FGV") %>%
+  hc_xAxis(title = list(text = "Meses",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_yAxis(title = list(text = "Percentual",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
+
+
+```
+
+
+#### DI
 
 ### Estoque {.toc} 
 
@@ -1322,7 +1456,6 @@ tabela dos saldos
 ### Emissão de dívidas {.toc} 
 
 ## MERCADO NACIONAL {.toc}
-
 ### CAGED {.toc} 
 
 ### PNAD {.toc} 
