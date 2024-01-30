@@ -129,6 +129,10 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
 
 <div class="spacer"></div>
 
+<!-- Incluir a biblioteca Lightbox2 -->
+<link href="Images/lightbox2-2.11.4/dist/css/lightbox.css" rel="stylesheet" />
+<script src="Images/lightbox2-2.11.4/dist/js/lightbox.js"></script>
+
 
 ```{r include=FALSE}
 
@@ -207,63 +211,6 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = populacao)) %>%
 ```
 
 <div class="spacer"></div>
-
-```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
-
-## problemas com codificacao existentes, setado para rodar apenas nesse chunk
-invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
-
-## funcao para obter dados do bacen sgs
-bcb.sgs <- function(x,y){
-  gbcbd_get_series(id = x ,
-                       first.date = y,
-                       last.date = Sys.Date(),
-                       format.data = 'long',
-                       use.memoise = TRUE, 
-                       cache.path = tempdir(), # use tempdir for cache folder
-                       do.parallel = FALSE)
-}
-
-## capturando e tratando dados
-df.bcb <- data.frame()
-
-for (i in 1402:1406) {
-  x <- bcb.sgs(i, '1900-01-01') %>% 
-    select(ref.date, value)
-  colnames(x)[2] <- as.character(i)
-  
-  if (nrow(df.bcb) == 0) {
-    df.bcb <- x
-  } else {
-    df.bcb <- merge(df.bcb, x, by = "ref.date")
-  }
-}
-
-colnames(df.bcb) <- c("data",
-    "Brasil - Comercial", 
-    "Brasil - Residencial",
-    "Brasil - Industrial",
-    "Brasil - Outros",
-    "Brasil - Total")
-
-df.bcb <- df.bcb %>%
-  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
-
-## Plotando gráficos
-hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
-  hc_title(text = "Consumo de energia elétrica") %>%
-  hc_subtitle(text = "Fonte: Eletrobras") %>%
-  hc_xAxis(title = list(text = "Meses",
-                        style = list(fontWeight = "bold",
-                                     fontsize = "2rem"))) %>%
-  hc_yAxis(title = list(text = "Gigawatts-hora",
-                        style = list(fontWeight = "bold",
-                                     fontsize = "2rem"))) %>%
-  hc_legend(enabled = TRUE)
-
-
-```
-
 
 ## PRODUTO {.toc}
 
@@ -555,8 +502,11 @@ Em termos gerais, o regime de metas para a inflação envolve os seguintes eleme
 <div class="dual-frames">
 <div class="frame">
 
-![Fonte: [Banco Central do Brasil](https://www.bcb.gov.br/controleinflacao/metainflacao)](Images/inflacao.png){.img-responsive .center}
-
+<!--Usar biblioteca lightbox do java para criar o popup -->
+  <a href="images/inflacao.png" data-lightbox="imagem" data-title="Fonte: [Banco Central do Brasil](https://www.bcb.gov.br/controleinflacao/metainflacao)">
+    <img src="images/inflacao.png" alt="Imagem" class="img-responsive center" style="display: inline-block;">
+  </a>
+  
 </div>
 <div class="frame">
 
@@ -593,8 +543,7 @@ driver$server$stop()
 
 
 ```
-
-```{r echo=FALSE, warning=FALSE, message=FALSE, out.width='100%'}
+```{r echo=FALSE, warning=FALSE, message=FALSE, out.width='100%', fig.height=4}
 
 if(nrow(df)>1){
         # Excluir a linha do ano 2003* e 2004*
@@ -621,37 +570,45 @@ if(nrow(df)>1){
           mutate(Meta = `Meta (%)`)
         df <- df %>% select(Ano, Meta, Intervalo_inferior,Intervalo_superior)
         
-        # Transformando coluna ano em data
-        df$Ano <- as.Date(paste0(df$Ano, "-01-01"))
-        
-        
-        
         # Substituir vírgulas por pontos apenas nas colunas numéricas
         df <- df %>% 
           mutate(across(c(Meta, Intervalo_inferior, Intervalo_superior), ~as.numeric(gsub(",", ".", .))))
         # Numero problematico
-        df$Meta[df$Ano == as.Date("2020-01-01")] <- "4.0"
-        
-        # Transformar Ano em formato de texto para evitar problemas de exibição
-        df$Ano <- as.character(df$Ano)
-
+        df$Meta[df$Ano == 2020] <- "4.0"
         
         # Criar o gráfico com highcharter
         plot_ly(df, x = ~Ano, y = ~Meta, name = "Meta", type = "scatter", mode = "lines") %>%
-        add_trace(x = ~Ano, y = ~Intervalo_inferior, name = "Intervalo_inferior", type = "scatter", mode = "lines", line = list(dash = "dash")) %>%
-        add_trace(x = ~Ano, y = ~Intervalo_superior, name = "Intervalo_superior", type = "scatter", mode = "lines", line = list(dash = "dash")) %>%
-        layout(
-          title = "Metas da inflação - CMN",
-          yaxis = list(title = "Variação %"),
-          xaxis = list(title = "Ano"),
-          legend = list(x = 0.5, y = -0.2, orientation = "h")  # Posição e orientação da legenda
-        )
+  add_trace(x = ~Ano, y = ~Intervalo_inferior, name = "Intervalo_inferior", type = "scatter", mode = "lines", line = list(dash = "dash"), showlegend = FALSE) %>%
+  add_trace(x = ~Ano, y = ~Intervalo_superior, name = "Intervalo_superior", type = "scatter", mode = "lines", line = list(dash = "dash"), showlegend = FALSE) %>%
+  layout(
+    title = "",            # Remover o título
+    xaxis = list(title = ""),  # Remover título do eixo X
+    yaxis = list(title = ""), # Remover título do eixo Y
+    autosize = TRUE 
+  )
+
         
         
 }else{
   
-  print("Não foi possível carregar :(")
+  bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
   
+  meta <- bcb.sgs(13521, '1900-01-01')
+  
+  meta <- arrange(meta, desc(ref.date))
+  
+  hchart(meta, "line", hcaes(x = ref.date, y = value)) %>%
+  hc_title(text = " ") %>%
+  hc_subtitle(text = "Fonte: Banco Central") %>%
+  hc_legend(enabled = F)
   
 }
 
@@ -1375,9 +1332,11 @@ datatable(df.bcb_anual, options = list(
 
 ### Juros {.toc .tabset .tabset-fade .tabset-pills}
 
+<div class="spacer"></div>
+
 O juro nada mais é do que o valor do dinheiro no tempo. Cada país possui diferenças quanto ao tipo de juros, devendo sempre se atentar ao contrato. No caso brasileiro, usamos juros compostos com base de 252 dias úteis. Na maioria dos demais países, usa-se juros simples na base 360. 
 
-#### SELIC
+#### SELIC | CDI
 
 ```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
@@ -1400,10 +1359,10 @@ bcb.sgs <- function(x,y){
 df.bcb <- data.frame()
 
 ## Tabelas do BCB SGS
-I <-  c(7450,7456,7453,189)
+I <-  c(4389)
 
 for (i in I) {
-  x <- bcb.sgs(i, '1900-01-01') %>% 
+  x <- bcb.sgs(i, '2003-01-01') %>% 
     select(ref.date, value)
   colnames(x)[2] <- as.character(i)
   
@@ -1415,22 +1374,19 @@ for (i in I) {
 }
 
 colnames(df.bcb) <- c("data",
-    "IPA-M", 
-    "INCC-M",
-    "IPC-M",
-    "IGP-M")
+    "CDI")
 
 df.bcb_longer <- df.bcb %>%
   pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
 
 ## Plotando gráficos
 hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
-  hc_title(text = " ") %>%
-  hc_subtitle(text = "Fonte: FGV") %>%
-  hc_xAxis(title = list(text = "Meses",
+  hc_title(text = "") %>%
+  hc_subtitle(text = "Fonte: Cetip S.A. – Balcão Organizado de Ativos e Derivativos") %>%
+  hc_xAxis(title = list(text = "Data",
                         style = list(fontWeight = "bold",
                                      fontsize = "2rem"))) %>%
-  hc_yAxis(title = list(text = "Percentual",
+  hc_yAxis(title = list(text = "Percentual %a.a.",
                         style = list(fontWeight = "bold",
                                      fontsize = "2rem"))) %>%
   hc_legend(enabled = TRUE)
@@ -1439,11 +1395,386 @@ hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 ```
 
 
-#### DI
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(4390, 4390, 433)
+
+for (i in I) {
+  x <- bcb.sgs(i, '2003-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "CDI",
+    "SELIC",
+    "IPCA")
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = "IPCA | CDI | SELIC - % a.m.") %>%
+  hc_subtitle(text = "Fontes: IBGE | Cetip S.A. | BCB-Demab ") %>%
+  hc_xAxis(title = list(text = "Data",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_yAxis(title = list(text = "Percentual %a.m.",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
+
+
+```
+
+#### TR | TBF
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(253, 226)
+
+for (i in I) {
+  x <- bcb.sgs(i, '2003-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "Taxa básica financeira (TBF)",
+    "Taxa referencial (TR)"
+    )
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = " ") %>%
+  hc_subtitle(text = "Fonte: BCB-Demab ") %>%
+  hc_xAxis(title = list(text = "Data",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_yAxis(title = list(text = "Percentual % a.m.",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
+
+
+```
+
+#### TJLP
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(256)
+
+for (i in I) {
+  x <- bcb.sgs(i, '2003-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "Taxa de juros de longo prazo - TJLP"
+    )
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = " ") %>%
+  hc_subtitle(text = "Fonte: BCB-Demab ") %>%
+  hc_xAxis(title = list(text = "Anos ",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_yAxis(title = list(text = "Percentual % a.a.",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
+
+
+```
+
+#### PTAX {.tabset .tabset-fade .tabset-pills}
+
+##### Dólar Americano
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(1, 10813)
+
+for (i in I) {
+  x <- bcb.sgs(i, '2003-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "Taxa de câmbio - Livre - Dólar americano (venda) - diário",
+    "Taxa de câmbio - Livre - Dólar americano (compra) - diário"
+    )
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+df.bcb_longer <- df.bcb_longer %>% 
+  mutate(data = as.Date(data))
+
+plot_ly(df.bcb_longer, x = ~data) %>%
+  add_lines(y = ~valor, color = ~variavel, line = list(width = 2)) %>%
+  layout(
+    title = "",
+    xaxis = list(title = "Dia", tickfont = list(size = 14, color = "black")),
+    yaxis = list(title = "u.m.c./US$", tickfont = list(size = 14, color = "black")),
+    legend = list(x = 0.0, y = -0.2, orientation = "h", font = list(size = 14)),
+    font = list(size = 14)
+  )
+
+
+```
+
+##### Euro
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(21619, 21620)
+
+for (i in I) {
+  x <- bcb.sgs(i, '2003-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "Taxa de câmbio - Livre - Euro (venda)",
+    "	Taxa de câmbio - Livre - Euro (compra)"
+    )
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+df.bcb_longer <- df.bcb_longer %>% 
+  mutate(data = as.Date(data))
+
+plot_ly(df.bcb_longer, x = ~data) %>%
+  add_lines(y = ~valor, color = ~variavel, line = list(width = 2)) %>%
+  layout(
+    title = "",
+    xaxis = list(title = "Dia", tickfont = list(size = 14, color = "black")),
+    yaxis = list(title = "R$/u.m.c.", tickfont = list(size = 14, color = "black")),
+    legend = list(x = 0.0, y = -0.2, orientation = "h", font = list(size = 14)),
+    font = list(size = 14)
+  )
+
+
+```
+
 
 ### Estoque {.toc} 
 
-m1
+<div class="spacer"></div>
+
+Os meios de pagamentos amplos são indicadores antecedentes da demanda por moeda, constituindo-se em medida mais fidedigna da liquidez macroeconômica em relação aos agregados monetários restritos, que somente incluem o papel moeda em poder do público e os depósitos à vista. Nesse sentido, os seus componentes podem ser assim definidos:
+
+- M1 é composto pelo Papel-moeda em poder do público e pelos Depósitos à vista;
+- M2 adiciona ao M1 os Depósito de poupança, e os Títulos privados emitidos pelas instituições depositárias (1);  
+- M3 inclui no M2 as quotas de fundos de investimento depositários e as Operações compromissadas com títulos públicos e privados;
+- M4 engloba ao M3 os títulos públicos emitidos pelo Governo Federal.
+
+Deve-se ressaltar que os fundos de investimento considerados no cálculo do M3 não correspondem à população, compreendendo, efetivamente, as modalidades: Cambial; Renda fixa; e Multimercado. Na medida que não são considerados emissores de liquidez, e, portanto, classificados como agentes não depositários, estão excluídos os fundos de ações, fundos de dívida externa e os fundos de investimentos em quotas de fundos de investimentos.
+
+Observe-se que, dentre os títulos federais, somente são considerados os registrados no Sistema Especial de Liquidação e Custódia (Selic). Apesar da alta liquidez dos instrumentos de captação do Tesouro Nacional, entendeu-se que o reconhecimento dessas emissões como quase-moeda nos conceitos de meios de pagamento deve ser o mais restrito possível, dado que aquele Órgão não integra o Sistema Financeiro Nacional (SFN).
+
+*(1) São consideradas instituições depositárias aquelas cujos instrumentos de captação integram os meios de pagamento ampliados.*
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+## Tabelas do BCB SGS
+I <-  c(27791, 27810, 27813, 27815)
+
+for (i in I) {
+  x <- bcb.sgs(i, '2003-12-03') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "M1",
+    "M2",
+    "M3",
+    "M4"
+    )
+
+df.bcb_longer <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+df.bcb_longer <- df.bcb_longer %>% 
+  mutate(data = as.Date(data))
+
+plot_ly(df.bcb_longer, x = ~data) %>%
+  add_lines(y = ~valor, color = ~variavel, line = list(width = 2)) %>%
+  layout(
+    title = "Fonte: BCB - DSTAT",
+    xaxis = list(title = "Mensal", tickfont = list(size = 14, color = "black")),
+    yaxis = list(title = "u.m.c. (mil).", tickfont = list(size = 14, color = "black")),
+    legend = list(x = 0.0, y = -0.2, orientation = "h", font = list(size = 14)),
+    font = list(size = 14)
+  )
+
+
+```
+
 
 ### B. pagamentos {.toc} 
 
@@ -1456,6 +1787,65 @@ tabela dos saldos
 ### Emissão de dívidas {.toc} 
 
 ## MERCADO NACIONAL {.toc}
+
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(x,y){
+  gbcbd_get_series(id = x ,
+                       first.date = y,
+                       last.date = Sys.Date(),
+                       format.data = 'long',
+                       use.memoise = TRUE, 
+                       cache.path = tempdir(), # use tempdir for cache folder
+                       do.parallel = FALSE)
+}
+
+## capturando e tratando dados
+df.bcb <- data.frame()
+
+for (i in 1402:1406) {
+  x <- bcb.sgs(i, '1900-01-01') %>% 
+    select(ref.date, value)
+  colnames(x)[2] <- as.character(i)
+  
+  if (nrow(df.bcb) == 0) {
+    df.bcb <- x
+  } else {
+    df.bcb <- merge(df.bcb, x, by = "ref.date")
+  }
+}
+
+colnames(df.bcb) <- c("data",
+    "Brasil - Comercial", 
+    "Brasil - Residencial",
+    "Brasil - Industrial",
+    "Brasil - Outros",
+    "Brasil - Total")
+
+df.bcb <- df.bcb %>%
+  pivot_longer(cols = -data, names_to = "variavel", values_to = "valor")
+
+## Plotando gráficos
+hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
+  hc_title(text = "Consumo de energia elétrica") %>%
+  hc_subtitle(text = "Fonte: Eletrobras") %>%
+  hc_xAxis(title = list(text = "Meses",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_yAxis(title = list(text = "Gigawatts-hora",
+                        style = list(fontWeight = "bold",
+                                     fontsize = "2rem"))) %>%
+  hc_legend(enabled = TRUE)
+
+
+```
+
+
 ### CAGED {.toc} 
 
 ### PNAD {.toc} 
