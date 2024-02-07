@@ -125,16 +125,3 @@ library(GetBCBData)
 ```
 
 
-# teste
-
-texto
-
-## teste 2
-
-texto
-
-## teste 2
-
-texo
-
-# teste
