@@ -139,22 +139,29 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
 #carregando pacotes
 library(bookdown)
 library(sidrar)
+library(devtools)
+library(ipeadatar)
+library(GetBCBData)
 library(ggplot2)
+library(gt)
+library(gtExtras)
 library(dplyr)
 library(tidyverse)
+library(dplyr)
 library(lubridate)
 library(knitr)
+library(openxlsx)
 library(kableExtra)
 library(DT)
 library(forcats)
 library(plotly)
 library(highcharter)
-library(GetBCBData)
 library(rvest)
 library(RSelenium)
 library(wdman)
 library(netstat)
 library(htmlTable)
+library(fs)
 
 
 ```
@@ -162,7 +169,6 @@ library(htmlTable)
 # BRASIL
 
 Dados referentes a economia brasileira. Dados para auxiliar a entender a conjuntura econômica do nosso país.
-
 <div class="spacer"></div>
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
@@ -209,19 +215,15 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = populacao)) %>%
 
 
 ```
-
 <div class="spacer"></div>
 
 ## PRODUTO {.toc}
-
 <div class="spacer"></div>
 
 As métricas de produto buscam mensurar quantidade de riqueza gerada em um país, estado ou cidade, dentro de um período de tempo.
-
 <div class="spacer"></div>
 
 ### Produto Interno Bruto {.toc}
-
 <div class="spacer"></div>
 
 O Produto Interno Bruto (PIB - *GDP/Gross Domestic Product*) é a soma de todos os bens e serviços finais produzidos por um país, estado ou cidade, geralmente em um ano.
@@ -240,13 +242,11 @@ O Produto Interno Bruto (PIB - *GDP/Gross Domestic Product*) é a soma de todos 
 <div class="spacer"></div>
 
 Existem três metodologias de cálculo do PIB, sendo que teoricamente todas elas chegam ao mesmo valor final.
-
 <div class="spacer"></div>
 
 **Ótica da oferta ou produção**
 
 Também conhecida como *método do valor adicionado*, calcula o montante que cada estágio da produção agrega ao produto. Primeiro estima-se o do *valor adicionado bruto* fabricado das diversas atividades econômicas.Posteriormente estima-se o valor do *consumo intermediário*, onde considera os custos dos bens e serviços utilizados para produzir os bens e serviços finais. Ademais, subtrai o valor doméstico bruto do valor intermediário. Por fim, *subtrai os valores dos impostos indiretos e soma os valores dos subsídios*. 
-
 <div class="spacer"></div>
 
 **Ótica da renda**
@@ -254,13 +254,11 @@ Também conhecida como *método do valor adicionado*, calcula o montante que cad
 O método inicia com o somatório dos *salários, vencimentos e rendimentos* recebidos pelas atividades laborais, *juros e receitas* advindos de diversos investimentos, *aluguéis* referentes aos alugueis/arrendamentos de imóveis ou terras, *lucros corporativos* oriundos dos lucros das empresas e *lucros líquidos* das transferências dos lucros das empresas para as pessoas.
 Este somatório resulta no rendimento doméstico líquido dos custos dos fatores.
 Para chegar ao PIB, deve-se ainda considerar a *deprecisação do capital*, as *taxas de produção e importação* e os *subsídios* estatais. 
-
 <div class="spacer"></div>
 
 **Ótica do consumo**
 
 Essa é a metologia mais divulgada onde o PIB é mesurado pela soma do *consumo (C)*, *investimento (I)*, *gastos do governo (G)* e *balança comercial (X-M)*. Por este método utiliza os preços de aquisição dos bens e serviços finais. Quando não realizada a venda, a contabilidade considera que o produtor comprou de si mesmo. 
-
 <div class="spacer"></div>
 
 *DADOS [BACEN SGS](https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries)*
@@ -268,7 +266,6 @@ Essa é a metologia mais divulgada onde o PIB é mesurado pela soma do *consumo 
 **PIB - acumulado dos últimos 12 meses - Em US$ milhões - BCB SGS 4192**
 
 Oficialmente o IBGE calcula trimestralmente o PIB , entretanto, devido a utilização deste agregado econômico para formulação de políticas públicas e demais necessidades, o Departamento Econômico do Banco Central estima o PIB por meio da interpolação com dados já divulgados, realizando extrapolação do último valor divulgado do PIB Nominal, sofrendo revisões periódicas.
-
 <div class="spacer"></div>
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
@@ -281,7 +278,7 @@ df.bcb <- gbcbd_get_series(id = 4192 ,
                        cache.path = tempdir(), # use tempdir for cache folder
                        do.parallel = FALSE)
 
-hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
+hchart(df.bcb, "line", hcaes(x = ref.date, y = value)) %>%
   hc_yAxis(title = list(text = "US$ milhões")) %>%
   hc_xAxis(title = list(text = "Data")) %>%
   hc_legend(enabled = FALSE) %>%
@@ -299,7 +296,6 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
 
 
 ```
-
 <div class="spacer"></div>
 
 **PIB per capita - US$ correntes - 21776**
@@ -314,7 +310,7 @@ df.bcb <- gbcbd_get_series(id = 21776 ,
                        cache.path = tempdir(), # use tempdir for cache folder
                        do.parallel = FALSE)
 
-hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
+hchart(df.bcb, "line", hcaes(x = ref.date, y = value)) %>%
   hc_yAxis(title = list(text = "US$",
                         labels = list(
       formatter = JS(
@@ -338,7 +334,6 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
   )
 
 ```
-
 <div class="spacer"></div>
 
 **PIB - taxa de variação real no ano - 7326 | 7327 |7328 | 7329**
@@ -395,7 +390,6 @@ hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 
 
 ```
-
 <div class="spacer"></div>
 
 **PIB - Preços correntes de 1990 - 1207**
@@ -443,7 +437,6 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
   )
 
 ```
-
 <div class="spacer"></div>
 
 ## MOEDA {.toc}
@@ -462,7 +455,6 @@ A inflação pode ter várias causas, que podem ser agrupadas em:
 - Pressões de custos
 - Inércia inflacionária
 - Expectativas de inflação
-
 <div class="spacer"></div>
 
 **Consequências da inflação**
@@ -470,13 +462,11 @@ A inflação pode ter várias causas, que podem ser agrupadas em:
 A inflação descontrolada gera incertezas importantes na economia, desestimulando o investimento e, assim, prejudicando o crescimento econômico. Os preços relativos ficam distorcidos, gerando várias ineficiências na economia. As pessoas e as firmas perdem noção dos preços relativos e, assim, fica difícil avaliar se algo está barato ou caro. A inflação afeta particularmente as camadas menos favorecidas da população, pois essas têm menos acesso a instrumentos financeiros para se defender da inflação.
 
 Inflação mais alta também aumenta o custo da dívida pública, pois as taxas de juros da dívida pública têm de compensar não só o efeito da inflação mas também têm de incluir um prêmio de risco para compensar as incertezas associadas com a inflação mais alta.
-
 <div class="spacer"></div>
 
 **Por que a deflação é também indesejável?**
 
 O Banco Central trabalha para manter a inflação baixa – não para que os preços declinem. A perspectiva de que os valores cobrados sejam relativamente estáveis ao longo do tempo, com inflação baixa e previsível, é importante para o planejamento de todos. Ao contrário do que possa parecer, preços em queda podem ser prejudiciais para o bom funcionamento da economia. Um comerciante poderá ter prejuízo se ganhar menos amanhã pelo estoque que fez hoje. As famílias e as empresas poderão adiar suas decisões de consumo e investimento se houver a perspectiva de que os preços serão mais baixos amanhã, deprimindo a atividade econômica.
-
 <div class="spacer"></div>
 
 **Metas para a inflação**
@@ -622,7 +612,6 @@ if(nrow(df)>1){
 <div class="spacer"></div>
 
 #### IPCA {.tabset .tabset-fade .tabset-pills}
-
 <div class="spacer"></div>
 
 O IPCA mede a variação de preços de uma cesta de produtos e serviços consumida pela população. O resultado mostra se os preços aumentaram ou diminuíram de um mês para o outro.
@@ -890,7 +879,6 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 ##### Localidade
 
 #### INPC {.tabset .tabset-fade .tabset-pills}
-
 <div class="spacer"></div>
 
 O INPC verifica a variação do custo de vida médio apenas de famílias<span style="font-weight: bold; color: #ff6600;"> com renda mensal de 1 a 5 salários mínimos</span>. Esses grupos são mais sensíveis às variações de preços, pois tendem a gastar todo o seu rendimento em itens básicos, como alimentação, medicamentos, transporte etc
@@ -900,7 +888,6 @@ O propósito do INPC e IPCA são o mesmo: medir a variação de preços de uma c
 A cesta de ambos é definida pela [Pesquisa de Orçamentos Familiares](https://www.ibge.gov.br/estatisticas/sociais/populacao/24786-pesquisa-de-orcamentos-familiares-2.html?utm_source=landing&utm_medium=explica&utm_campaign=inflacao) - POF, do IBGE, que, entre outras questões, verifica o que a população consome e quanto do rendimento familiar é gasto em cada produto: arroz, feijão, passagem de ônibus, material escolar, médico, cinema, entre outros.
 
 Os índices, portanto, levam em conta não apenas a variação de preço de cada item, mas também o peso que ele tem no orçamento das famílias.
-
 <div class="spacer"></div>
 
 [Tabela 7063](https://sidra.ibge.gov.br/tabela/7063)
@@ -1095,7 +1082,6 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 
 
 #### IPGM {.tabset .tabset-fade .tabset-pills}
-
 <div class="spacer"></div>
 
 O indicador foi concebido no final dos anos de 1940 para ser uma medida abrangente do movimento de preços, que englobasse não apenas diferentes atividades como também etapas distintas do processo produtivo. Dessa forma, o IGP é um indicador mensal do nível de atividade econômica do país, englobando seus principais setores.
@@ -1113,7 +1099,6 @@ Os pesos de cada um dos índices componentes correspondem a parcelas da despesa 
 - 10% para o INCC.
 
 Nesse contexto, o IPA é o indicador que monitora a variação de preços percebidos por produtores, ao passo que o IPC acompanha o comportamento dos preços que impactam diretamente o consumidor final. Por fim, o INCC apresenta os custos para a construção civil, em uma análise que leva em conta a variação de preços de materiais de construção e custo de mão de obra especializada.
-
 <div class="spacer"></div>
 
 ```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
@@ -1174,7 +1159,6 @@ hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 
 
 ```
-
 <div class="spacer"></div>
 
 ##### Mensal
@@ -1331,7 +1315,6 @@ datatable(df.bcb_anual, options = list(
 <div class="spacer"></div>
 
 ### Juros {.toc .tabset .tabset-fade .tabset-pills}
-
 <div class="spacer"></div>
 
 O juro nada mais é do que o valor do dinheiro no tempo. Cada país possui diferenças quanto ao tipo de juros, devendo sempre se atentar ao contrato. No caso brasileiro, usamos juros compostos com base de 252 dias úteis. Na maioria dos demais países, usa-se juros simples na base 360. 
@@ -1698,7 +1681,6 @@ plot_ly(df.bcb_longer, x = ~data) %>%
 
 
 ### Estoque {.toc} 
-
 <div class="spacer"></div>
 
 Os meios de pagamentos amplos são indicadores antecedentes da demanda por moeda, constituindo-se em medida mais fidedigna da liquidez macroeconômica em relação aos agregados monetários restritos, que somente incluem o papel moeda em poder do público e os depósitos à vista. Nesse sentido, os seus componentes podem ser assim definidos:
@@ -1777,12 +1759,396 @@ plot_ly(df.bcb_longer, x = ~data) %>%
 
 
 ### B. pagamentos {.toc} 
+<div class="spacer"></div>
 
-tabela dos saldos
+O balanço de pagamentos é o registro estatístico de todas as transações – fluxo de bens e direitos de valor econômico – entre os residentes de uma economia e o restante do mundo, ocorridos em determinado período de tempo.
+
+[Séries históricas – BPM6](https://www.bcb.gov.br/estatisticas/notasmetodologicas)
+
+```{r include=FALSE}
+
+## problemas com codificacao existentes, setado para rodar apenas nesse chunk
+invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
+
+
+## funcao para obter dados do bacen sgs
+bcb.sgs <- function(id, start_date, max_attempts = 10) {
+  attempt <- 1
+  result <- NULL
+  
+  while (is.null(result) && attempt <= max_attempts) {
+    tryCatch({
+      result <- gbcbd_get_series(id = id,
+                                  first.date = '1998-01-01',
+                                  last.date = Sys.Date(),
+                                  format.data = 'long',
+                                  use.memoise = TRUE, 
+                                  cache.path = tempdir(), 
+                                  do.parallel = FALSE)
+    }, error = function(e) {
+      cat(paste("Error in fetching data for id =", id, "Attempt", attempt, "\n"))
+      Sys.sleep(2)  # Aguarde um pouco antes de tentar novamente
+      attempt <- attempt + 1
+    })
+    
+    # Reiniciar attempt para 1 se a tentativa for bem-sucedida
+    if (!is.null(result)) {
+      attempt <- 1
+    }
+  }
+  
+  if (is.null(result)) {
+    cat(paste("Max attempts reached for id =", id, ". Unable to fetch data.\n"))
+  }
+  
+  return(result)
+}
+
+processar_dados <- function(codigos, grupo, subgrupo, rubricas) {
+  df <- data.frame()
+
+  for (i in codigos) {
+    x <- bcb.sgs(i) %>% 
+      select(ref.date, value)
+    colnames(x)[2] <- as.character(i)
+
+    if (nrow(df) == 0) {
+      df <- x
+    } else {
+      df <- merge(df, x, by = "ref.date")
+    }
+  }
+
+  colnames(df) <- rubricas
+  
+  df <- arrange(df, desc(data))
+
+  df_transposto <- t(df)
+  df_transposto <- as.data.frame(df_transposto)
+  
+  # Adicionar as colunas de grupo e subgrupo
+  df_transposto$grupo <- grupo
+  df_transposto$subgrupo <- subgrupo
+  
+  df_transposto <- df_transposto %>%
+    select(grupo, subgrupo, everything())
+  
+  # Ajustar nomes das colunas após a transposição
+  colnames(df_transposto) <- c("grupo", "subgrupo", as.character(df_transposto[1, -c(1, 2)]))
+
+  # Remover a primeira linha que agora é usada como colunas
+  df_transposto <- df_transposto[-1, ]
+
+  
+  return(df_transposto)
+}
+
+
+# Transacoes_Correntes (grupo)
+rubricas <- c("data",
+              "1. Transações Correntes")
+
+Transacoes_Correntes <- processar_dados(c(22701), 
+                                  "Transações Correntes",
+                                  "Transações Correntes", 
+                                  rubricas)
+
+Sys.sleep(1)
+
+## BALANCA_COMERCIAL_DE_BENS
+rubricas <- c("data",
+              "1.1 Balança comercial de bens",
+              "1.1.1 Exportações",
+              "1.1.2 Importações")
+
+df_transposto_BALANCA_COMERCIAL_DE_BENS <- processar_dados(c(22707,
+                                                          22708, 
+                                                          22709), 
+                                                          "Transações Correntes",
+                                                          "Balança Comercial de Bens", 
+                                                          rubricas)
+
+Sys.sleep(1)
+
+## BALANCA_COMERCIAL_DE_SERVICOS
+rubricas <- c("data",
+              "1.2 Balança comercial de serviços",
+              "1.2.1 Serviços de manufatura sobre insumos físicos pertencentes a outros",
+              "1.2.2 Serviços de manutenção e reparo",
+              "1.2.3 Transportes",
+              "1.2.4 Viagens",
+              "1.2.5 Construção",
+              "1.2.6 Seguros",
+              "1.2.7 Serviços financeiros",
+              "1.2.8 Serviços de propriedade intelectual",
+              "1.2.9 Telecomunicação, computação e informações",
+              "1.2.10 Aluguel de equipamentos",
+              "1.2.11 Outros serviços de negócio",
+              "1.2.12 Serviços culturais, pessoais e recreativos",
+              "1.2.13 Serviços governamentais")
+
+df_transposto_BALANCA_COMERCIAL_DE_SERVICOS <- processar_dados(c(22719,
+                                                              22722, 
+                                                              22725,
+                                                              22728,
+                                                              22740,
+                                                              22761,
+                                                              22764,
+                                                              22767,
+                                                              22776,
+                                                              22779,
+                                                              22782,
+                                                              22785,
+                                                              22788,
+                                                              22797), 
+                                                              "Transações Correntes",
+                                                              "Balança Comercial de Serviços", 
+                                                              rubricas)
+
+
+Sys.sleep(1)
+
+## RENDA_PRIMARIA
+rubricas <- c("data",
+              "1.3 Renda Primária",
+              "1.3.1 Salários e ordenados",
+              "1.3.2 Renda de investimento em carteira",
+              "1.3.3 Demais rendas primárias")
+
+df_transposto_RENDA_PRIMARIA <- processar_dados(c(22800,
+                                                  22803, 
+                                                  22806,
+                                                  22835), 
+                                                   "Transações Correntes",
+                                                   "Renda primária", 
+                                                   rubricas)
+
+Sys.sleep(1)
+
+## RENDA_SECUNDARIA
+rubricas <- c("data",
+               "1.4 Renda Secundária",
+               "1.4.1 Governo",
+               "1.4.2 Demais setores")
+
+df_transposto_RENDA_SECUNDARIA <- processar_dados(c(22838,
+                                                    22841, 
+                                                    22844), 
+                                                    "Transações Correntes",
+                                                    "Renda secundária", 
+                                                    rubricas)
+Sys.sleep(1)
+
+# CONTA_CAPITAL
+rubricas <- c("data",
+              "2. Conta Capital",
+              "2.1 Ativos não financeiros não produzidos",
+              "2.2 Transferências de capital")
+
+df_transposto_CONTA_CAPITAL <- processar_dados(c(22851,
+                                                 22854, 
+                                                 22860), 
+                                                 "Conta Capital",
+                                                 "Conta Capital", 
+                                                 rubricas)
+Sys.sleep(1)
+                      
+# CONTA_FINANCEIRA
+rubricas <- c("data",
+              "3. Conta Financeira")
+
+Conta_Financeira <- processar_dados(c(22863), 
+                                  "Conta Financeira",
+                                  "Conta Financeira", 
+                                  rubricas)
+Sys.sleep(1)
+
+## INVESTIMENTO_DIRETO
+rubricas <- c("data",
+              "3.1 Investimento Direto",
+              "3.1.1 Investimentos diretos no exterior",
+              "3.1.2 Investimentos diretos no país")
+
+df_transposto_INVESTIMENTO_DIRETO <- processar_dados(c(22864,
+                                                       22803, 
+                                                       22885), 
+                                                       "Conta Financeira",
+                                                       "Investimento Direto", 
+                                                       rubricas)
+Sys.sleep(1)
+
+## INVESTIMENTO_EM_CARTEIRA
+rubricas <- c("data",
+               "3.2 Investimento em Carteira",
+               "3.2.1 Ativos",
+               "3.2.2 Passivos")
+
+df_transposto_INVESTIMENTO_EM_CARTEIRA <- processar_dados(c(22905,
+                                                            22906, 
+                                                            22806), 
+                                                            "Conta Financeira",
+                                                            "Investimento em Carteira", 
+                                                            rubricas)
+Sys.sleep(1)
+
+## DERIVATIVOS
+rubricas <- c("data",
+              "3.3 Derivativos")
+
+df_transposto_DERIVATIVOS <- processar_dados(c(22966), 
+                                                  "Conta Financeira",
+                                                   "Derivativos", 
+                                                   rubricas)
+Sys.sleep(1)
+
+## OUTROS_INVESTIMENTOS
+rubricas <- c("data",
+             "3.4 Outros Investimentos",
+             "3.4.1 Outras participações em capital",
+             "3.4.2 Moeda e depósitos",
+             "3.4.3 Empréstimos",
+             "3.4.4 Seguros, esquemas de pensão e de fundos de garantia",
+             "3.4.5 Créditos comerciais e adiantamentos",
+             "3.4.6 Outras contas a pagar/receber",
+             "3.4.7 Direitos Especiais de Saque - Incidência líquida de passivos"
+              )
+
+df_transposto_OUTROS_INVESTIMENTOS <- processar_dados(c(22969,
+                                                        22972, 
+                                                        22979,
+                                                        22990,
+                                                        23021,
+                                                        23024,
+                                                        23035,
+                                                        23042), 
+                                                        "Conta Financeira",
+                                                        "Outros Investimentos", 
+                                                        rubricas)
+Sys.sleep(1)
+
+## ATIVOS_DE_RESERVA
+rubricas <- c("data",
+               "3.5 Ativos de Reserva",
+               "3.5.1 Ouro monetário",
+               "3.5.2 Direitos Especiais de Saque",
+               "3.5.3 Posição de reserva no FMI",
+               "3.5.4 Outros ativos de reserva",
+               "3.5.5 Demais ativos"
+              )
+
+df_transposto_ATIVOS_DE_RESERVA <- processar_dados(c(23043,
+                                                     23044, 
+                                                     23047,
+                                                     23048,
+                                                     23049,
+                                                     23059), 
+                                                     "Conta Financeira",
+                                                     "Ativos de Reserva", 
+                                                     rubricas)
+Sys.sleep(1)
+
+# ERROS_E_OMISSOES
+rubricas <- c("data",
+              "4. Erros e Omissões")
+
+df_transposto_ERROS_E_OMISSOES <- processar_dados(c(23060), 
+                                                  "Erros e Omissões",
+                                                   "Erros e Omissões", 
+                                                   rubricas)
+
+```
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100vw'}
+
+DF_BALANCO_DE_PAGAMENTOS <- rbind(Transacoes_Correntes,
+                                  df_transposto_BALANCA_COMERCIAL_DE_BENS,
+                                  df_transposto_BALANCA_COMERCIAL_DE_SERVICOS,
+                                  df_transposto_RENDA_PRIMARIA,
+                                  df_transposto_RENDA_SECUNDARIA,
+                                  df_transposto_CONTA_CAPITAL,
+                                  Conta_Financeira,
+                                  df_transposto_INVESTIMENTO_DIRETO,
+                                  df_transposto_INVESTIMENTO_EM_CARTEIRA,
+                                  df_transposto_DERIVATIVOS,
+                                  df_transposto_OUTROS_INVESTIMENTOS,
+                                  df_transposto_ATIVOS_DE_RESERVA,
+                                  df_transposto_ERROS_E_OMISSOES)
+
+df <- DF_BALANCO_DE_PAGAMENTOS[, -(1:2)]
+
+tabela_rownames<- c("1. Transações Correntes",
+                    "1.1 Balança comercial de bens",
+                    "1.1.1 Exportações",
+                    "1.1.2 Importações",
+                    "1.2 Balança comercial de serviços",
+                    "1.3 Renda Primária",
+                    "1.4 Renda Secundária",
+                    "2. Conta Capital",
+                    "3. Conta Financeira",
+                    "3.1 Investimento Direto",
+                    "3.2 Investimento em Carteira",
+                    "3.3 Derivativos",
+                    "3.4 Outros Investimentos",
+                    "3.5 Ativos de Reserva",
+                    "4. Erros e Omissões")
+
+
+
+tabela <- df[rownames(df) %in% tabela_rownames, , drop = FALSE]
+
+tabela <- tabela[, 1:6]
+nomes_colunas <- colnames(tabela)
+nomes_colunas_formatados <- format(ymd(nomes_colunas), "%b-%Y")
+colnames(tabela) <- nomes_colunas_formatados
+tabela <- tabela %>% mutate(Rubricas = rownames(tabela)) %>% 
+  select(Rubricas, everything())
+
+tabela %>% gt() %>% 
+  tab_style(style = "font-size: 1.6rem;", locations = cells_body()) %>% 
+  cols_align(align = "left",
+             columns = 1) %>% 
+  cols_align(align = "center",
+             columns = -1)%>% 
+  tab_header(
+  title = "Balanço de Pagamentos",
+  subtitle = "Fonte: BCB - DSTAT") %>% 
+  tab_source_note(md("Unidade: *US$ (milhões)*"))%>%
+  gt_theme_538()
+
+
+
+```
+
+
+```{r include= FALSE, warning=FALSE}
+
+# Verifique se o arquivo existe
+if (file.exists("docs/tabela_completa.xlsx")) {
+  # Se existir, exclua o arquivo
+  fs::file_delete("docs/tabela_completa.xlsx")
+}
+
+file_path <- "docs/tabela_completa.xlsx"
+openxlsx::write.xlsx(df, file_path, rowNames = T)
+
+```
+<div class="spacer"></div>
+
+[Download tabela completa](docs/tabela_completa.xml)
+<div class="spacer"></div>
 
 ## GOVERNO {.toc}
+<div class="spacer"></div>
+
+Dados referentes as receitas e dispêndios do governo.
+
+- [PPA | LDO | LOA](https://www12.senado.leg.br/orcamento/legislacao-orcamentaria#:~:text=A%20LOA%20%C3%A9%20o%20or%C3%A7amento,de%20agosto%20de%20cada%20ano.)
+<div class="spacer"></div>
 
 ### Defict fiscal {.toc} 
+
+
 
 ### Emissão de dívidas {.toc} 
 
@@ -1846,9 +2212,287 @@ hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 ```
 
 
-### CAGED {.toc} 
+### CAGED 
+<div class="spacer"></div>
 
-### PNAD {.toc} 
+O [Cadastro Geral de Empregados e Desempregados (CAGED)](https://www.gov.br/trabalho-e-emprego/pt-br/servicos/empregador/caged) foi criado como registro permanente de admissões e dispensa de empregados, sob o regime da Consolidação das Leis do Trabalho (CLT). É utilizado pelo Programa de Seguro-Desemprego, para conferir os dados referentes aos vínculos trabalhistas, além de outros programas sociais.
+<div class="spacer"></div>
+
+```{r include=FALSE}
+
+
+dados_ipea <- function(grupo){
+dados <- data.frame(date = character(), stringsAsFactors = FALSE)
+
+# Loop para baixar e juntar os dados
+for (i in seq_along(grupo$parametro1)) {
+  codigo <- grupo$parametro1[i]
+  nome_codigo <- grupo$parametro2[i]
+  
+  df <- ipeadata(code = codigo, language = "br") %>% 
+    select(date, value) 
+    
+  colnames(df) <- c("date", paste(nome_codigo)) 
+  
+  if (nrow(dados) > 0) {
+    dados <- merge(dados, df, by = "date", all = TRUE)
+  } else {
+    dados <- df
+  }
+}
+return(dados)
+}
+
+novo <- list(parametro1 = c("CAGED12_SALDON12",
+                             "CAGED12_DESLIGN12",
+                             "CAGED12_ADMISN12"), 
+             parametro2 =  c("saldo",
+                             "demissões",
+                             "admissões"))
+
+antigo <- list(parametro1 = c("CAGED12_SALDO12",
+                              "CAGED12_DESLIG",
+                              "CAGED12_ADMIS"), 
+              parametro2 =  c("saldo",
+                              "demissões",
+                              "admissões"))
+
+novo_caged <- dados_ipea(novo) %>% 
+  arrange(desc(date))
+antigo_caged <- dados_ipea(antigo) %>% 
+  arrange(desc(date))
+total_caged <- rbind(novo_caged, antigo_caged)
+
+calcular_variacao_mensal <- function(col) {
+  if (is.numeric(col)) {
+    col_numeric <- as.numeric(col)
+    return(((col / lag(col, n = 1)) - 1) * 100)
+  } else {
+    return(col)
+  }
+}
+calcular_variacao_anual <- function(col) {
+  if (is.numeric(col)) {
+    col_numeric <- as.numeric(col)
+    return(((col / lag(col, n = 1)) - 12) * 100)
+  } else {
+    return(col)
+  }
+}
+
+```
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+
+head(novo_caged, n=12) %>% gt() %>% 
+  fmt_number(
+    columns = where(is.numeric),
+    decimals = 0,
+    use_seps = TRUE ,
+    sep_mark = "."
+  ) %>%         
+  tab_style(style = "font-size: 1.6rem;", locations = cells_body()) %>% 
+  cols_align(align = "left",
+             columns = 1) %>% 
+  cols_align(align = "center",
+             columns = -1)%>% 
+  tab_header(
+  title = "Variação mensal do Novo Caged",
+  subtitle = "Fonte: Min. Economia - SEPRT") %>% 
+  tab_source_note(md("Secretaria Especial de Previdência e Trabalho, Cadastro Geral de Empregados e Desempregados (Min. Economia/SEPRT/Novo Caged)"))%>%
+  tab_footnote("CAGED12_SALDON12 | CAGED12_DESLIGN12 | CAGED12_ADMISN12") %>% 
+  gt_theme_538()
+
+```
+<div class="spacer"></div>
+
+```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+# Converter a data para formato de texto
+total_caged <- arrange(total_caged, date)
+
+total_caged$date_text <- as.character(total_caged$date)
+
+hchart(total_caged, type = "line", hcaes(x = date_text)) %>%
+  hc_add_series(total_caged$saldo, name = "Saldo") %>%
+  hc_add_series(total_caged$demissões, name = "Demissões") %>%
+  hc_add_series(total_caged$admissões, name = "Admissões") %>%
+  hc_title(text = "Antigo e Novo Caged") %>%
+  hc_subtitle(text = "Fonte: Ministério da Economia - SEPRT") %>%
+  hc_credits(text = "Novo Caged após 2020") %>% 
+  hc_xAxis(
+    title = list(text = " "),
+    plotLines = list(
+      list(
+        color = "#00BFFF",  # Vermelho
+        width = 4,
+        value = which(total_caged$date_text == "2020-01-01") - 1,
+        dashStyle = "dash"
+      )
+    )
+  ) %>% 
+  hc_plotOptions(
+    series = list(
+      events = list(
+        click = JS("function(event) {
+          var chart = this;
+          var extremes = chart.xAxis[0].getExtremes();
+          var range = extremes.max - extremes.min;
+          var left = event.xAxis[0].value - (range / 2);
+          var right = event.xAxis[0].value + (range / 2);
+          chart.xAxis[0].setExtremes(left, right);
+        }")
+      )
+    )
+  ) %>% 
+  hc_legend(enabled = TRUE)
+
+  
+
+```
+<div class="spacer"></div>
+
+### PNAD CONTÍNUA{.toc} 
+<div class="spacer"></div>
+
+A [Pnad Contínua](https://www.ibge.gov.br/estatisticas/sociais/populacao/9171-pesquisa-nacional-por-amostra-de-domicilios-continua-mensal.html?=&t=o-que-e) isa acompanhar as flutuações trimestrais e a evolução, no curto, médio e longo prazos, da força de trabalho, e outras informações necessárias para o estudo do desenvolvimento socioeconômico do País.
+<div class="spacer"></div>
+Os indicadores mensais utilizam as informações dos últimos três meses consecutivos da pesquisa, existindo, entre um trimestre móvel e o seguinte, repetição das informações de dois meses. Assim, os indicadores da PNAD Contínua produzidos mensalmente não refletem a situação de cada mês, mas, sim, a situação do trimestre móvel que finaliza a cada mês.
+<div class="spacer"></div>
+
+**Taxa de desocupação**
+[Tabela 6381](https://sidra.ibge.gov.br/tabela/6381)
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100vw'}
+
+sidra <- function(z, y)
+{
+  get_sidra(api = z) %>% 
+    select(`Trimestre Móvel (Código)`, `Valor`, `Variável`) %>% 
+    mutate(Data = as.Date(paste0(`Trimestre Móvel (Código)`, "01"), format = "%Y%m%d")) %>% 
+    select(Data, Valor, `Variável`) %>% 
+    mutate(Data = format(Data, "%Y-%m")) %>% 
+    filter(Data >= y) 
+    }
+
+PNAD <- sidra('/t/6381/n1/all/v/4099/p/all/d/v4099%201', 
+              format(Sys.Date() - months(240), "%Y-%m")) %>% 
+  pivot_wider(names_from = "Variável", values_from = "Valor")
+
+PNAD <- arrange(PNAD, Data)
+colnames(PNAD) <- c("Data", "Taxa de desocupação")
+
+hchart(PNAD, type = "line", hcaes(x = Data)) %>%
+  hc_add_series(PNAD$`Taxa de desocupação`, name = "Real") %>%
+  hc_title(text = "Taxa de desocupação - PNADC/M") %>%
+  hc_subtitle(text = "Fonte: IBGE") %>%
+  hc_credits(text = "Tabela 6381") %>% 
+  hc_plotOptions(
+    series = list(
+      events = list(
+        click = JS("function(event) {
+          var chart = this;
+          var extremes = chart.xAxis[0].getExtremes();
+          var range = extremes.max - extremes.min;
+          var left = event.xAxis[0].value - (range / 2);
+          var right = event.xAxis[0].value + (range / 2);
+          chart.xAxis[0].setExtremes(left, right);
+        }")
+      )
+    )
+  ) %>% 
+  hc_legend(enabled = TRUE)
+
+
+```
+<div class="spacer"></div>
+
+**Taxa de desocupação - por grupo de idade**
+[Tabela 6397](https://sidra.ibge.gov.br/tabela/6397)
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100vw'}
+
+desocupacao <- get_sidra(api = "/t/6397/n1/all/v/4099/p/all/c58/allxt/d/v4099%201")
+
+hchart(desocupacao, type = "line" , hcaes(x = `Trimestre`, y = Valor, group = `Grupo de idade`)) %>%
+  hc_title(text = "Taxa de desocupação - por grupo de idade - PNADC/M") %>%
+  hc_subtitle(text = "Fonte: IBGE") %>%
+  hc_credits(text = "Tabela 6381") %>% 
+  hc_legend(enabled = TRUE)
+
+
+```
+<div class="spacer"></div>
+
+**Taxa de desocupação - por sexo **
+[Tabela 6396](https://sidra.ibge.gov.br/tabela/6396)
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100vw'}
+
+desocupacao <- get_sidra(api = "/t/6396/n1/all/v/4099/p/all/c2/all/d/v4099%201")
+
+hchart(desocupacao, type = "line" , hcaes(x = `Trimestre`, y = Valor, group = `Sexo`)) %>%
+  hc_title(text = "Taxa de desocupação - por sexo - PNADC/M") %>%
+  hc_subtitle(text = "Fonte: IBGE") %>%
+  hc_credits(text = "Tabela 6396") %>% 
+  hc_legend(enabled = TRUE)
+
+
+```
+<div class="spacer"></div>
+
+**Rendimento médio mensal real e nominal das pessoas de 14 anos ou mais de idade ocupadas na semana de referência com rendimento de trabalho, habitualmente recebido em todos os trabalhos **
+[Tabela 6390](https://sidra.ibge.gov.br/tabela/6390)
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100vw'}
+
+sidra <- function(z, y)
+{
+  get_sidra(api = z) %>% 
+    select(`Trimestre Móvel (Código)`, `Valor`, `Variável`) %>% 
+    mutate(Data = as.Date(paste0(`Trimestre Móvel (Código)`, "01"), format = "%Y%m%d")) %>% 
+    select(Data, Valor, `Variável`) %>% 
+    mutate(Data = format(Data, "%Y-%m")) %>% 
+    filter(Data >= y) 
+    }
+
+PNAD <- sidra('/t/6390/n1/all/v/5929,5933/p/all', 
+              format(Sys.Date() - months(240), "%Y-%m")) %>% 
+  pivot_wider(names_from = "Variável", values_from = "Valor")
+
+PNAD <- arrange(PNAD, Data)
+colnames(PNAD) <- c("Data", "Nominal", "Real")
+
+hchart(PNAD, type = "line", hcaes(x = Data)) %>%
+  hc_add_series(PNAD$Real, name = "Real") %>%
+  hc_add_series(PNAD$Nominal, name = "Nominal") %>%
+  hc_title(text = "Rendimento médio mensal - PNADC/M") %>%
+  hc_subtitle(text = "Fonte: IBGE") %>%
+  hc_credits(text = "Tabela 6390") %>% 
+  hc_plotOptions(
+    series = list(
+      events = list(
+        click = JS("function(event) {
+          var chart = this;
+          var extremes = chart.xAxis[0].getExtremes();
+          var range = extremes.max - extremes.min;
+          var left = event.xAxis[0].value - (range / 2);
+          var right = event.xAxis[0].value + (range / 2);
+          chart.xAxis[0].setExtremes(left, right);
+        }")
+      )
+    )
+  ) %>% 
+  hc_legend(enabled = TRUE)
+
+
+
+```
+<div class="spacer"></div>
+
+
+
+
 
 ### PMC {.toc .tabset .tabset-fade .tabset-pills}
 
