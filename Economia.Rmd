@@ -162,6 +162,7 @@ library(wdman)
 library(netstat)
 library(htmlTable)
 library(fs)
+library(htmltools)
 
 
 ```
@@ -263,8 +264,6 @@ Essa é a metologia mais divulgada onde o PIB é mesurado pela soma do *consumo 
 
 *DADOS [BACEN SGS](https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries)*
 
-**PIB - acumulado dos últimos 12 meses - Em US$ milhões - BCB SGS 4192**
-
 Oficialmente o IBGE calcula trimestralmente o PIB , entretanto, devido a utilização deste agregado econômico para formulação de políticas públicas e demais necessidades, o Departamento Econômico do Banco Central estima o PIB por meio da interpolação com dados já divulgados, realizando extrapolação do último valor divulgado do PIB Nominal, sofrendo revisões periódicas.
 <div class="spacer"></div>
 
@@ -283,8 +282,9 @@ hchart(df.bcb, "line", hcaes(x = ref.date, y = value)) %>%
   hc_xAxis(title = list(text = "Data")) %>%
   hc_legend(enabled = FALSE) %>%
   hc_plotOptions(column = list(stacking = "normal")) %>%
-  hc_title(text = "") %>%
+  hc_title(text = "PIB - acumulado dos últimos 12 meses") %>%
   hc_subtitle(text = "Fonte: BCB - Depec")  %>%
+  hc_caption(text = "BCB SGS 4192") %>% 
   hc_tooltip(
     useHTML = TRUE,
     headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
@@ -296,9 +296,8 @@ hchart(df.bcb, "line", hcaes(x = ref.date, y = value)) %>%
 
 
 ```
-<div class="spacer"></div>
 
-**PIB per capita - US$ correntes - 21776**
+<div class="spacer"></div>
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
@@ -311,7 +310,7 @@ df.bcb <- gbcbd_get_series(id = 21776 ,
                        do.parallel = FALSE)
 
 hchart(df.bcb, "line", hcaes(x = ref.date, y = value)) %>%
-  hc_yAxis(title = list(text = "US$",
+  hc_yAxis(title = list(text = "US$ correntes",
                         labels = list(
       formatter = JS(
         "function() { 
@@ -322,8 +321,9 @@ hchart(df.bcb, "line", hcaes(x = ref.date, y = value)) %>%
   hc_xAxis(title = list(text = "Data")) %>%
   hc_legend(enabled = FALSE) %>%
   hc_plotOptions(column = list(stacking = "normal")) %>%
-  hc_title(text = "") %>%
-  hc_subtitle(text = "Fonte: BCB - Depec")  %>%
+  hc_title(text = "PIB per capita") %>%
+  hc_subtitle(text = "Fonte: 	BCB-Depec")  %>% 
+  hc_caption(text = "BCB SGS 21776")  %>%
   hc_tooltip(
     useHTML = TRUE,
     headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
@@ -334,9 +334,8 @@ hchart(df.bcb, "line", hcaes(x = ref.date, y = value)) %>%
   )
 
 ```
-<div class="spacer"></div>
 
-**PIB - taxa de variação real no ano - 7326 | 7327 |7328 | 7329**
+<div class="spacer"></div>
 
 ```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
@@ -380,7 +379,9 @@ df.bcb <- df.bcb %>%
 
 ## Plotando gráficos
 hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
-  hc_title(text = " ") %>%
+  hc_title(text = "PIB - taxa de variação real no ano") %>%
+  hc_subtitle(text = "Fonte: IBGE")  %>% 
+  hc_caption(text = "BCB SGS 7326 | 7327 |7328 | 7329") %>%
   hc_subtitle(text = "Fonte: IBGE") %>%
   hc_xAxis(title = list(text = "Anos")) %>%
   hc_yAxis(title = list(text = "Variação % anual",
@@ -390,12 +391,8 @@ hchart(df.bcb, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 
 
 ```
+
 <div class="spacer"></div>
-
-**PIB - Preços correntes de 1990 - 1207**
-
-Os dados das Contas Nacionais Trimestrais (CNT), a preços constantes de 1990, são apresentados em uma série encadeada de índices de volume. Os dados são compilados pelo método da produção e cobrem toda a economia brasileira. O PIB em preços correntes mede o valor total de bens e serviços para uso final produzidos durante o trimestre antes da dedução do consumo de capital fixo.
-
 
 ```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
 
@@ -420,8 +417,9 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
   hc_xAxis(title = list(text = "Data")) %>%
   hc_legend(enabled = FALSE) %>%
   hc_plotOptions(column = list(stacking = "normal")) %>%
-  hc_title(text = "") %>%
-  hc_subtitle(text = "Fonte: IBGE")  %>%
+  hc_title(text = "PIB - Preços correntes de 1990") %>%
+  hc_subtitle(text = "Fonte: IBGE")  %>% 
+  hc_caption(text = "BCB SGS 1207") %>%
   hc_tooltip(
     useHTML = TRUE,
     headerFormat = "<span style='font-size:10px'>{point.key}</span><table>",
@@ -434,7 +432,7 @@ hchart(df.bcb, "column", hcaes(x = ref.date, y = value)) %>%
     footerFormat = "</table>",
     shared = TRUE,
     valueDecimals = 2
-  )
+  ) 
 
 ```
 <div class="spacer"></div>
@@ -878,6 +876,28 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 
 ##### Localidade
 
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+local <- get_sidra(api = "/t/7060/n7/all/n6/all/v/2265/p/all/c315/7169/d/v2265%202") %>% 
+  filter(`Mês (Código)` == max(`Mês (Código)`)) %>% 
+  mutate(cor = ifelse(Valor > 0, "#82C35F", "#E75A5A"))
+
+plot_ly(data = local, 
+        x = ~Valor, 
+        y = ~fct_rev(`Região Metropolitana e Município`), 
+        type = "bar",
+        marker = list(color = ~cor)) %>% 
+  layout(
+    xaxis = list(title = " "),
+    yaxis = list(title = " "),
+    title = "VARIAÇÃO ACUMULADA 12 MESES DO IPCA POR LOCALIDADE",
+    showlegend = FALSE
+  )
+
+
+```
+
+
 #### INPC {.tabset .tabset-fade .tabset-pills}
 <div class="spacer"></div>
 
@@ -1080,6 +1100,26 @@ plot_ly(pesos, x = ~`Mês (Código)`, y = ~Valor, type = "bar", color = ~fct_rev
 
 ##### Localidade
 
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+local <- get_sidra(api = "/t/7063/n7/all/n6/all/v/2292/p/all/c315/7169/d/v2292%202") %>% 
+  filter(`Mês (Código)` == max(`Mês (Código)`)) %>% 
+  mutate(cor = ifelse(Valor > 0, "#82C35F", "#E75A5A"))
+
+plot_ly(data = local, 
+        x = ~Valor, 
+        y = ~fct_rev(`Região Metropolitana e Município`), 
+        type = "bar",
+        marker = list(color = ~cor)) %>% 
+  layout(
+    xaxis = list(title = " "),
+    yaxis = list(title = " "),
+    title = "VARIAÇÃO ACUMULADA 12 MESES DO INPC POR LOCALIDADE",
+    showlegend = FALSE
+  )
+
+
+```
 
 #### IPGM {.tabset .tabset-fade .tabset-pills}
 <div class="spacer"></div>
@@ -1560,7 +1600,6 @@ hchart(df.bcb_longer, "line", hcaes(x = data, y = valor, group = variavel)) %>%
 ##### Dólar Americano
 
 ```{r results='asis', engine='R', echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
-
 ## problemas com codificacao existentes, setado para rodar apenas nesse chunk
 invisible(Sys.setlocale("LC_CTYPE", "en_US.UTF-8"))
 
@@ -1996,9 +2035,9 @@ rubricas <- c("data",
               "3.3 Derivativos")
 
 df_transposto_DERIVATIVOS <- processar_dados(c(22966), 
-                                                  "Conta Financeira",
-                                                   "Derivativos", 
-                                                   rubricas)
+                                                "Conta Financeira",
+                                                "Derivativos", 
+                                                rubricas)
 Sys.sleep(1)
 
 ## OUTROS_INVESTIMENTOS
@@ -2135,7 +2174,8 @@ openxlsx::write.xlsx(df, file_path, rowNames = T)
 ```
 <div class="spacer"></div>
 
-[Download tabela completa](docs/tabela_completa.xml)
+[Download tabela completa](docs/tabela_completa.xlsx)
+
 <div class="spacer"></div>
 
 ## GOVERNO {.toc}
@@ -2353,7 +2393,7 @@ hchart(total_caged, type = "line", hcaes(x = date_text)) %>%
 ```
 <div class="spacer"></div>
 
-### PNAD CONTÍNUA{.toc} 
+### PNAD Contínua{.toc} 
 <div class="spacer"></div>
 
 A [Pnad Contínua](https://www.ibge.gov.br/estatisticas/sociais/populacao/9171-pesquisa-nacional-por-amostra-de-domicilios-continua-mensal.html?=&t=o-que-e) isa acompanhar as flutuações trimestrais e a evolução, no curto, médio e longo prazos, da força de trabalho, e outras informações necessárias para o estudo do desenvolvimento socioeconômico do País.
@@ -2483,10 +2523,6 @@ hchart(PNAD, type = "line", hcaes(x = Data)) %>%
 
 ```
 <div class="spacer"></div>
-
-
-
-
 
 ### PMC {.toc .tabset .tabset-fade .tabset-pills}
 
@@ -2703,7 +2739,140 @@ hchart(PMS, "column", hcaes(x = Data, y = PMS_MENSAL, color = ifelse(PMS_MENSAL 
 
 ### PMI {.toc} 
 
-### Cielo {.toc}
+<div class="spacer"></div>
+<div class="dual-frames">
+<div class="frame">
 
-### Carros {.toc}
+<!--Usar biblioteca lightbox do java para criar o popup -->
+  <a href="images/PMI/manufactoring_jan.png" data-lightbox="imagem" data-title="Fonte: [S&P Global Brazil Manufacturing PMI](https://www.pmi.spglobal.com/Public/Release/PressReleases?language=pt)">
+    <img src="images/PMI/manufactoring_jan.png" alt="Imagem" class="img-responsive center" style="display: inline-block;">
+  </a>
+  
+</div>
+<div class="frame">
 
+<!--Usar biblioteca lightbox do java para criar o popup -->
+  <a href="images/PMI/services_jan.png" data-lightbox="imagem" data-title="Fonte: [S&P Global Brazil Services PMI](https://www.pmi.spglobal.com/Public/Release/PressReleases?language=pt)">
+    <img src="images/PMI/services_jan.png" alt="Imagem" class="img-responsive center" style="display: inline-block;">
+  </a>
+
+</div>
+</div>
+
+[S&P Global Brasil PMI® setor industrial](https://www.pmi.spglobal.com/Public/Home/PressRelease/51aecc67759445668562c75304340f89)
+[PMI® Serviços S&P Global para o Brasil](https://www.pmi.spglobal.com/Public/Home/PressRelease/236326c8841a4b229368ed91b490c17b)
+
+<div class="spacer"></div>
+
+### Fenabrav
+
+<div class="spacer"></div>
+
+Número de unidades de autoveículos que foram emplacados no período de referência. Neste caso, trata-se do número de emplacamentos dos autoveículos, que corresponde a soma dos automóveis, comerciais leves, caminhões e ônibus
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+dados_ipea <- function(grupo){
+dados <- data.frame(date = character(), stringsAsFactors = FALSE)
+
+# Loop para baixar e juntar os dados
+for (i in seq_along(grupo$parametro1)) {
+  codigo <- grupo$parametro1[i]
+  nome_codigo <- grupo$parametro2[i]
+  
+  df <- ipeadata(code = codigo, language = "br") %>% 
+    select(date, value) 
+    
+  colnames(df) <- c("date", paste(nome_codigo)) 
+  
+  if (nrow(dados) > 0) {
+    dados <- merge(dados, df, by = "date", all = TRUE)
+  } else {
+    dados <- df
+  }
+}
+return(dados)
+}
+
+novo <- list(parametro1 = c("FENABRAVE12_VENDAUTO12",
+                             "FENABRAVE12_VENDVETOT12"), 
+             parametro2 =  c("Emplacamento de carros de passeio",
+                             "Emplecamento de automóveis, comerciais leves, caminhões e ônibus"))
+
+
+carros <- dados_ipea(novo) %>% 
+  mutate(date = format(date, "%Y-%m")) %>% 
+  pivot_longer(cols = -date, names_to = "variavel", values_to = "valor")
+
+
+
+hchart(carros, type = "line", hcaes(x = date, y = valor, group=variavel)) %>%
+  hc_title(text = "Emplacamentos") %>%
+  hc_subtitle(text = "Fonte: Fenabrav") %>%
+  hc_credits(text = "Ipeadata: FENABRAVE12_VENDAUTO12 | FENABRAVE12_VENDVETOT12") %>% 
+  hc_legend(enabled = TRUE)
+  
+
+
+
+
+```
+
+
+<div class="spacer"></div>
+
+### ICC
+
+O Índice de confiança do consumidor (ICC) tem como objetivo identificar o sentimento dos consumidores levando em conta suas condições econômicas atuais e a expectativa em relação à sua situação econômica futura. O índice é calculado a partir de um questionário e, em cada pergunta, são computadas as diferenças entre as frequências de respostas positivas e negativas, sendo o índice final a média simples dessas diferenças. 
+<div class="spacer"></div>
+Variando de 0 (pessimismo total) a 200 (otimismo total), ele é composto a partir de dados segmentados por nível de renda, sexo e idade. 
+O ICC é composto por outros dois índices: 
+- ICEA - Índice de condições econômicas atuais
+- IEC - Índice de expectativas do consumidor
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, fig.align='center', out.width='100%'}
+
+dados_ipea <- function(grupo){
+dados <- data.frame(date = character(), stringsAsFactors = FALSE)
+
+# Loop para baixar e juntar os dados
+for (i in seq_along(grupo$parametro1)) {
+  codigo <- grupo$parametro1[i]
+  nome_codigo <- grupo$parametro2[i]
+  
+  df <- ipeadata(code = codigo, language = "br") %>% 
+    select(date, value) 
+    
+  colnames(df) <- c("date", paste(nome_codigo)) 
+  
+  if (nrow(dados) > 0) {
+    dados <- merge(dados, df, by = "date", all = TRUE)
+  } else {
+    dados <- df
+  }
+}
+return(dados)
+}
+
+novo <- list(parametro1 = c("FCESP12_IIC12"), 
+             parametro2 =  c("Índice de confiança do consumidor (ICC)"))
+
+
+ICC <- dados_ipea(novo) %>% 
+  mutate(date = format(date, "%Y-%m"))
+
+hchart(ICC, type = "line", hcaes(x = date, y = ICC$`Índice de confiança do consumidor (ICC)`)) %>%
+  hc_title(text = "Índice de confiança do consumidor") %>%
+  hc_subtitle(text = "Fonte: Fecomercio SP") %>%
+  hc_credits(text = "Ipeadata: FCESP12_IIC12") %>% 
+  hc_yAxis(title = list(text = "ICC")) %>% 
+  hc_xAxis(title = list(text = " "))
+  
+
+
+
+
+```
+
+<div class="spacer"></div>

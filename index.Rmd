@@ -8,7 +8,7 @@ output:
     fig_height: 6
     fig_caption: true
     number_sections: false 
-    toc: yes
+    toc: no
     toc_depth: 3
     toc_float:
         collapsed: no
@@ -88,23 +88,35 @@ date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(S
 
   .frame {
     width: 48%;
-    border: 0.2rem solid #ddd;
-    padding: 0.8rem;
+    padding: 0.0rem;
     box-sizing: border-box;
-    font-size: 1rem; /* Exemplo de tamanho de fonte para os quadros usando unidades relativas */
-
-    /* Adicione uma margem inferior para espaçamento entre os quadros */
-    margin-bottom: 1em;
+    font-size: 1rem;
+    margin-bottom: 0em;
+  }
+  
+  .frame img {
+    border: none; /* Remove a borda da imagem */
   }
 
-  /* Estilos para telas menores que 600 pixels de largura */
   @media only screen and (max-width: 600px) {
-  body {
-    margin-left: 0; /* Remove o recuo na margem esquerda para telas menores */
-    font-size: 2rem;
+    .dual-frames {
+      flex-direction: column; /* Altera para layout vertical */
+    }
+
+    .frame {
+      width: 100%; /* Ocupa toda a largura disponível */
     }
   }
 </style>
+
+<!-- distancia -->
+<style>
+  .distancia {
+      margin-bottom: 5rem;
+  }
+</style>
+
+
 
 ```{r include=FALSE}
 #carregando pacotes
@@ -123,5 +135,70 @@ library(highcharter)
 library(GetBCBData)
 
 ```
+
+<!-- Começando o codigo -->
+
+<div class="dual-frames">
+<div class="frame">
+
+Bem-vindo ao meu site!
+
+<div class="spacer"></div>
+
+Quero compartilhar com você este espaço dedicado à análise e visualização de dados econômicos e financeiros do Brasil e dos principais mercados globais.
+
+<div class="spacer"></div>
+
+Neste site, você encontrará tabelas e gráficos elaborados a partir de dados oficiais, os quais são extraídos com bibliotecas no R, como sidrar, GetBCBData e ipeadatar.
+
+<div class="spacer"></div>
+
+Para mais informações, você pode me encontrar no <a href="https://www.linkedin.com/in/luiz-felipe-meier-cfp®-69a3b6a2"><i class="fab fa-linkedin"></i> LinkedIn</a> ou entrar em contato através do <a href="mailto:luizfelipe.meier@hotmail.com"><i class="fas fa-envelope-square"></i> e-mail</a>.
+
+<div class="spacer"></div>
+
+</div>
+<div class="frame">
+
+<a href="https://github.com/luizfelipemeier/economia-investimentos">
+  <img src="Images/site.png" alt="Apresentação" style="width: 100%; height: 20rem;">
+</a>
+
+</div>
+</div>
+
+<!-- hiperlinks -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
