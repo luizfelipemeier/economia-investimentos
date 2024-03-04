@@ -8,13 +8,13 @@ output:
     fig_height: 6
     fig_caption: true
     number_sections: false 
-    toc: no
+    toc: yes
     toc_depth: 3
     toc_float:
         collapsed: no
         smooth_scroll: yes
     css: "style.css"
-date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(Sys.time(), format = '%d de %B de %Y')`"
+date: "Atualizado em `r paste0(format(Sys.Date(), format = '%d de '), c('janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')[as.integer(format(Sys.Date(), format = '%m'))], format(Sys.Date(), format = ' de %Y'))`"
 ---
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
@@ -160,9 +160,7 @@ Para mais informações, você pode me encontrar no <a href="https://www.linkedi
 </div>
 <div class="frame">
 
-<a href="https://github.com/luizfelipemeier/economia-investimentos">
-  <img src="Images/site.png" alt="Apresentação" style="width: 100%; height: 20rem;">
-</a>
+
 
 </div>
 </div>

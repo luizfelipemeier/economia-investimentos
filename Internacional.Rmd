@@ -14,7 +14,7 @@ output:
         collapsed: no
         smooth_scroll: yes
     css: "style.css"
-date: "Atualizado em `r Sys.setlocale('LC_TIME', 'Portuguese_Brazil') ; format(Sys.time(), format = '%d de %B de %Y')`"
+date: "Atualizado em `r paste0(format(Sys.Date(), format = '%d de '), c('janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro')[as.integer(format(Sys.Date(), format = '%m'))], format(Sys.Date(), format = ' de %Y'))`"
 ---
 <!-- Inclua a biblioteca Font Awesome -->
 <script src="https://kit.fontawesome.com/4e10600d5e.js" crossorigin="anonymous"></script>
@@ -144,85 +144,7 @@ library(GetBCBData)
 
 ```
 
-# INTERNACIONAL
-
-Agora vai
-
-## AMERICA
-
-### Estados Unidos
-
-#### CPI
-
-#### INTEREST RATE
-
-#### PAYROLL
-
-#### PMI
-
-### Argentina
-
-#### CPI
-
-#### INTEREST RATE
-
-#### PAYROLL
-
-#### PMI
-
-## ASIA
-
-### China
-
-#### CPI
-
-#### INTEREST RATE
-
-#### PAYROLL
-
-#### PMI
-
-### Índia
-
-#### CPI
-
-#### INTEREST RATE
-
-#### PAYROLL
-
-#### PMI
-
-### Japão
-
-#### CPI
-
-#### INTEREST RATE
-
-#### PAYROLL
-
-#### PMI
-
-## EUROPA
-
-### Alemanha
-
-#### CPI
-
-#### INTEREST RATE
-
-#### PAYROLL
-
-#### PMI
-
-### Rússia
-
-#### CPI
-
-#### INTEREST RATE
-
-#### PAYROLL
-
-#### PMI
+site em contrução...
 
 
 
